@@ -96,16 +96,46 @@ html[data-faction] .btn--primary { color: var(--white); }
 .pre-mine__hint { font-size: 1.1rem; color: var(--mute); }
 .pre-mine:hover .pre-mine__hint { color: var(--body); }
 /* 2단계 헤드 — h2 보다 한 단 작게 */
-.pre-step2 { display: flex; align-items: center; justify-content: center; margin: 4.8rem 0 2.4rem;
-  font-family: var(--font-display); font-weight: 700; letter-spacing: 0; font-size: 2.4rem; color: var(--white); }
-.pre-sub { text-align: center; margin: 2.4rem 0 0; }
+/* 단계 라벨 — 명사형. 숫자는 기존 `.step` 재사용 */
+.step-label { display: flex; align-items: center; justify-content: center; margin: 0 0 1.6rem;
+  font-family: var(--font-display); font-weight: 700; letter-spacing: 0; font-size: 1.9rem; color: var(--body); }
+
+/* ②+③ 흐름 — PC 2/3 : 1/3, 태블릿 이하 세로 */
+.pre-flow { display: grid; gap: 2.4rem; margin-top: 4rem; align-items: start; }
+@media (min-width: 1439px) { .pre-flow { grid-template-columns: 2fr 1fr; gap: 3.2rem; } }
+.pre-extra { display: grid; gap: 1.6rem; }
+@media (min-width: 767px) and (max-width: 1438px) {
+  .pre-extra { grid-template-columns: 1fr 1fr; }
+  .pre-extra .step-label { grid-column: 1 / -1; }
+}
+/* ② 카드 안 보상 약속 — 폼보다 먼저 읽히게 상단 고정 */
+
+/* ③ 스탬프 — 강조는 테두리색이 아니라 완료 상태로만 표시한다 */
+.stamp { display: flex; flex-direction: column; gap: 1.2rem; transition: border-color .15s; }
+.stamp__head { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; }
+.stamp__t { font-size: 1.7rem; font-weight: 700; color: var(--body); }
+.stamp__p { margin: 0; font-size: 1.35rem; color: var(--mute); }
+/* ①③ 보상은 소형 태그로만 — 검증할 수 없는 트랙이라 '확정 지급'을 붙이지 않는다 */
+.stamp__tag { margin: 0; font-size: 1.2rem; color: var(--dim); }
+.stamp__foot { margin: .4rem 0 0; font-size: 1.15rem; color: var(--dim); text-align: center; }
+.stamp__done { margin-left: auto; font-size: 1.2rem; font-weight: 700; color: var(--gold-hi); }
+.stamp__done::before { content: "✓"; margin-right: .4rem; }
+.stamp.is-done { border-color: var(--gold-deep); }
+/* 진행 표시 — ③ 자기 체크 기준. 받는 보상 개수가 아니다 */
+.step-prog { margin-left: 1.2rem; font-family: var(--font); font-weight: 600; font-size: 1.2rem; color: var(--mute); letter-spacing: 0; }
+/* ② 폼 아래 보상 4종 띠 */
+.rw4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; }
+.rw4__i { display: grid; justify-items: center; gap: .6rem; font-size: 1.1rem; color: var(--mute); text-align: center; }
+.rw4__ph { width: 100%; max-width: 7.2rem; aspect-ratio: 1; border-radius: .4rem; border: 1px dashed var(--steel);
+  background: repeating-linear-gradient(45deg, #23262e, #23262e 6px, #1a1d24 6px, #1a1d24 12px); }
+.pre-sub { text-align: center; margin: 3.2rem 0 0; }
 .pre-foot { margin-top: 1.6rem; font-size: 1.1rem; color: var(--dim); text-align: center; line-height: 1.6; }
 /* 성향 테스트 — 헤드와 버튼 분리 */
 .fac__test { margin-top: 3.2rem; display: grid; gap: 1.6rem; justify-items: center; }
 .fac__test-h { font-family: var(--font-display); font-weight: 700; letter-spacing: 0; font-size: 1.9rem; color: var(--body); }
 @media (max-width: 766px) {
   .step { width: 2.8rem; height: 2.8rem; margin-right: .8rem; font-size: 1.4rem; }
-  .pre-step2 { font-size: 1.9rem; margin: 3.6rem 0 2rem; }
+  .step-label { font-size: 1.6rem; }
   .fac__test-h { font-size: 1.6rem; }
   .gate__opts { gap: .8rem; }
   .gate__opt { padding: 1.2rem 1rem; }
@@ -144,7 +174,7 @@ html[data-faction] .btn--primary { color: var(--white); }
    섹션 배경은 정지 이미지라 불투명이 맞다. */
 .gate__opt { position: relative; text-align: left; background: var(--char); border: 1px solid var(--line); border-radius: .6rem;
   padding: 1.8rem 2rem; color: var(--body); transition: border-color .15s, background .15s; }
-.gate__opt b { display: block; font-size: 2rem; font-weight: 800; color: var(--body); letter-spacing: -.02em; }
+.gate__opt b { display: block; font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--body); letter-spacing: 0; }
 .gate__opt span { display: block; font-size: 1.4rem; color: var(--mute); margin-top: .4rem; }
 .gate__opt[data-f="slayer"]:hover, .gate__opt[data-f="slayer"][aria-pressed="true"] { border-color: var(--sla); background: rgba(30,91,230,.10); }
 .gate__opt[data-f="vampire"]:hover, .gate__opt[data-f="vampire"][aria-pressed="true"] { border-color: var(--vam); background: rgba(176,18,32,.10); }
@@ -171,7 +201,6 @@ html[data-ratio="pending"] .fac__pending { display: block; }
 @media (max-width: 766px) { .pre-toggle__hint { position: static; width: 100%; text-align: right; }
   .pre-toggle { padding-bottom: 1.2rem; } }
 .pre-card { display: flex; flex-direction: column; gap: 1.4rem; }
-.pre-card__no { font-size: 1.2rem; font-weight: 800; letter-spacing: .1em; color: var(--gold); }
 .pre-card h3 { font-size: 2rem; font-weight: 800; color: var(--white); margin: 0; letter-spacing: -.02em; }
 .pre-card p { margin: 0; font-size: 1.4rem; color: var(--mute); }
 .reward { display: flex; gap: 1.2rem; align-items: center; padding: 1.2rem; background: rgba(7,7,11,.5); border: 1px solid var(--line); border-radius: .4rem; }
@@ -186,7 +215,9 @@ html[data-ratio="pending"] .fac__pending { display: block; }
 .agree { display: flex; gap: .8rem; align-items: flex-start; font-size: 1.2rem; color: var(--mute); }
 .agree a { text-decoration: underline; color: var(--body); }
 .chan-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
-.chan-row .btn { min-height: 4.4rem; font-size: 1.3rem; padding: 0 .8rem; }
+.chan-row .btn { min-height: 4.4rem; font-size: 1.25rem; padding: 0 .4rem; white-space: nowrap; }
+.chan-row--one { grid-template-columns: 1fr; }
+.chan-row--one .btn { font-size: 1.35rem; padding: 0 1.2rem; }
 .pre-all { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2.4rem; padding: 1.6rem 2rem; border: 1px solid var(--gold-deep); border-radius: .6rem; background: rgba(224,169,59,.06); }
 .pre-all b { color: var(--gold-hi); font-weight: 800; }
 .pre-notice { margin-top: 2rem; font-size: 1.15rem; color: var(--dim); line-height: 1.7; }
@@ -436,7 +467,7 @@ html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !importan
       </script>
     </div>
 
-    <div class="kv__cta"><a class="btn btn--primary" href="#sec-pre">지금 사전예약하기</a></div>
+    <div class="kv__cta"><a class="btn btn--primary" href="#sec-pre-form">지금 사전예약하기</a></div>
     <p class="kv__legal">본 게임에는 확률형 아이템이 포함되어 있습니다. <a href="/probability" style="text-decoration:underline">[확률형 아이템 정보]</a></p>
   </div>
 </section>
@@ -485,22 +516,21 @@ html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !importan
   <div class="sec__inner">
     <div class="sec__head center">
       <span class="t-eyebrow ko">사전예약</span>
-      <h2><b class="step">1</b>당신의 종족을 선택하세요</h2>
+      <h2>휴대폰 인증만 하면 됩니다</h2>
+      <p class="t-sub t-mute">보상 4종은 휴대폰 사전예약을 완료하신 분께 출시 후 게임 내 우편으로 드립니다</p>
+      <p class="step-label"><b class="step">1</b>종족 선택</p>
     </div>
 
     <!-- 신규 요소 — 진영 선택 게이트 (히어로에서 이동) -->
     <div class="gate">
       <div class="gate__opts">
         <button class="gate__opt" data-f="slayer" aria-pressed="false">
-          <b>SLAYER</b><span>함께 싸울수록 강해지는 종족</span>
+          <b>슬레이어</b><span>함께 싸울수록 강해지는 종족</span>
         </button>
         <button class="gate__opt" data-f="vampire" aria-pressed="false">
-          <b>VAMPIRE</b><span>혼자서도 압도하는 종족</span>
+          <b>뱀파이어</b><span>혼자서도 압도하는 종족</span>
         </button>
       </div>
-      <p class="gate__note">
-        사전예약 진영 선택은 이벤트 참여용이며, 게임 내 종족·서버 선택을 제한하지 않습니다.
-      </p>
     </div>
 
     <!-- 선택 결과 한 줄. 클릭하면 위 게이트로 돌아간다 -->
@@ -509,70 +539,68 @@ html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !importan
       <span class="pre-mine__hint">사전예약 완료 전까지 변경할 수 있습니다.</span>
     </button>
 
-    <h3 class="pre-step2"><b class="step">2</b>3가지 방법으로 참여하세요</h3>
-
-    <div class="grid grid--3">
-      <!-- 카드 ① 스토어 -->
-      <div class="card pre-card">
-        <span class="pre-card__no">01</span>
-        <h3>스토어 사전예약</h3>
-        <p>앱마켓에서 사전예약하고 출시 알림을 받으세요</p>
-        <div class="chan-row">
-          <button class="btn btn--ghost">App Store</button>
-          <button class="btn btn--ghost">Google Play</button>
-          <button class="btn btn--ghost">원스토어</button>
-        </div>
-        <div class="reward">
-          <div class="reward__ph" aria-hidden="true"></div>
-          <div class="reward__txt"><b>개조 재료 상자 ×20 · 보석 상자 ×5 확정 지급</b><i>보상 아이콘 — 클라이언트 원본 대기</i></div>
+    <!-- ② 주 행동 + ③ 추가 보상. PC 는 2/3 : 1/3 2단, 모바일은 세로 -->
+    <div class="pre-flow">
+      <div class="pre-main">
+        <p class="step-label"><b class="step">2</b>휴대폰 사전예약</p>
+        <div class="card pre-card stamp" id="sec-pre-form" data-stamp="phone">
+          <div class="field">
+            <input type="tel" inputmode="numeric" placeholder="휴대폰 번호 ( - 없이)" aria-label="휴대폰 번호">
+            <button class="btn btn--primary">인증번호</button>
+          </div>
+          <div class="field">
+            <input type="text" inputmode="numeric" placeholder="인증번호 6자리" aria-label="인증번호">
+            <button class="btn btn--ghost">확인</button>
+          </div>
+          <label class="agree"><input type="checkbox"> <span>[필수] 개인정보 수집·이용 동의 <a href="#">자세히</a></span></label>
+          <label class="agree"><input type="checkbox"> <span>[선택] 광고성 정보 수신 동의 <a href="#">자세히</a></span></label>
+          <div class="rw4">
+            <div class="rw4__i"><span class="rw4__ph" aria-hidden="true"></span>개조 재료 상자</div>
+            <div class="rw4__i"><span class="rw4__ph" aria-hidden="true"></span>변신</div>
+            <div class="rw4__i"><span class="rw4__ph" aria-hidden="true"></span>즉시이동권</div>
+            <div class="rw4__i"><span class="rw4__ph" aria-hidden="true"></span>펫 1종 · 도감 등록 재료</div>
+          </div>
+          <button class="btn btn--primary btn--block" data-stamp-hit>사전예약 완료하기</button>
+          <span class="stamp__done" hidden>인증 완료</span>
         </div>
       </div>
 
-      <!-- 카드 ② 문자인증 -->
-      <div class="card card--accent pre-card">
-        <span class="pre-card__no">02</span>
-        <h3>휴대폰 사전예약</h3>
-        <p>휴대폰 인증만 하면 가장 큰 보상을 드립니다</p>
-        <div class="field">
-          <input type="tel" inputmode="numeric" placeholder="휴대폰 번호 ( - 없이)" aria-label="휴대폰 번호">
-          <button class="btn btn--primary">인증번호</button>
-        </div>
-        <div class="field">
-          <input type="text" inputmode="numeric" placeholder="인증번호 6자리" aria-label="인증번호">
-          <button class="btn btn--ghost">확인</button>
-        </div>
-        <label class="agree"><input type="checkbox"> <span>[필수] 개인정보 수집·이용 동의 <a href="#">자세히</a></span></label>
-        <label class="agree"><input type="checkbox"> <span>[선택] 광고성 정보 수신 동의 <a href="#">자세히</a></span></label>
-        <div class="reward">
-          <div class="reward__ph" aria-hidden="true"></div>
-          <div class="reward__txt"><b>사전예약 전용 변신 1종 · 개조 재료 ×30 · 즉시이동권 ×30 확정 지급</b><i>보상 아이콘 — 클라이언트 원본 대기</i></div>
-        </div>
-        <button class="btn btn--primary btn--block">사전예약 완료하기</button>
-      </div>
+      <div class="pre-extra">
+        <p class="step-label"><b class="step">3</b>출시 소식을 먼저 받으세요<span class="step-prog" data-prog>참여 0/3</span></p>
 
-      <!-- 카드 ③ SNS -->
-      <div class="card pre-card">
-        <span class="pre-card__no">03</span>
-        <h3>채널 구독</h3>
-        <p>공식 채널을 구독하고 이벤트 소식을 가장 먼저 받아보세요</p>
-        <div class="chan-row">
-          <button class="btn btn--ghost">카카오</button>
-          <button class="btn btn--ghost">유튜브</button>
-          <button class="btn btn--ghost">카페</button>
+        <div class="card stamp" data-stamp="store">
+          <div class="stamp__head">
+            <b class="stamp__t">스토어 사전예약</b>
+            <span class="stamp__done" hidden>등록 완료</span>
+          </div>
+          <p class="stamp__p">출시되면 스토어가 알려 드립니다</p>
+          <div class="chan-row">
+            <button class="btn btn--ghost" type="button" data-stamp-hit>App Store</button>
+            <button class="btn btn--ghost" type="button" data-stamp-hit>Google Play</button>
+            <button class="btn btn--ghost" type="button" data-stamp-hit>원스토어</button>
+          </div>
+          <p class="stamp__tag">개조 재료 상자 ×20 · 보석 상자 ×5</p>
         </div>
-        <div class="reward">
-          <div class="reward__ph" aria-hidden="true"></div>
-          <div class="reward__txt"><b>즉시이동권 ×20 · 제자리부활권 ×10 확정 지급</b><i>보상 아이콘 — 클라이언트 원본 대기</i></div>
+
+        <div class="card stamp" data-stamp="channel">
+          <div class="stamp__head">
+            <b class="stamp__t">카카오톡 채널 추가</b>
+            <span class="stamp__done" hidden>추가 완료</span>
+          </div>
+          <p class="stamp__p">당첨 안내와 새 소식을 카카오톡으로 보내 드립니다</p>
+          <div class="chan-row chan-row--one">
+            <button class="btn btn--ghost" type="button" data-stamp-hit>카카오톡 채널 추가</button>
+          </div>
+          <p class="stamp__tag">즉시이동권 ×20 · 제자리부활권 ×10</p>
         </div>
+        <p class="stamp__foot">보상 지급은 02 휴대폰 사전예약에서 진행됩니다</p>
       </div>
     </div>
-
-    <p class="t-sub t-mute pre-sub">스토어 사전예약과 채널 추가까지 하시면 출시 알림과 당첨 안내를 먼저 받으실 수 있습니다</p>
 
     <div class="pre-all">
       <div class="reward__ph" aria-hidden="true"></div>
       <div><b>휴대폰 사전예약 완료 시 보상 4종 전원 지급!</b>
-        <div class="t-mute" style="font-size:1.2rem">전체 참여 추가 보상 — 펫 1종 · 도감 등록 재료 확정 지급! <i style="font-style:normal;color:var(--dim)">(아이콘 원본 대기)</i></div>
+        <div class="t-mute" style="font-size:1.2rem">개조 재료 상자 · 변신 · 즉시이동권 · 펫 <i style="font-style:normal;color:var(--dim)">(아이콘 원본 대기)</i></div>
       </div>
     </div>
 
@@ -635,9 +663,9 @@ html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !importan
 <section id="sec-world" class="sec" data-slot="world">
   <div class="sec__inner">
     <div class="sec__head center">
-      <span class="t-eyebrow world__eyebrow" lang="en">DARK EDEN SYNOPSIS</span>
-      <h2>종족 전쟁의 기원</h2>
-      <p class="world__sub">에덴이 잠긴 날부터 에슬라니아의 결계까지 6장면으로 담았습니다</p>
+      <span class="t-eyebrow world__eyebrow" lang="en">DARK EDEN</span>
+      <h2>모든 것은 낙원에서 시작됐다</h2>
+      <p class="world__sub">신이 빛을 거둔 그날부터, 에슬라니아의 밤은 끝나지 않았다</p>
     </div>
 
     <div class="wblock" data-ember>
@@ -653,7 +681,7 @@ html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !importan
     <div class="wblock">
       <figure class="wblock__fig" style="margin:0"><img src="assets/world_w03.jpg" alt="" loading="lazy"></figure>
       <div class="wblock__txt"><span class="wblock__no">03</span><h3>낙원 밖에서 흘린 첫 피</h3>
-        <p>신은 아담에게 이브를 주었고, 두 사람 사이에서 카인과 아벨이 태어났다. 이를 시기한 릴리스는 카인을 꾀어 아벨을 해치게 만들었다. 이 일을 알게 된 이브가 릴리스와 맞붙었으나 두 사람 모두 목숨을 잃었고, 릴리스는 영혼만 남은 채 흩어졌다.</p></div>
+        <p>신은 아담에게 이브를 보냈고, 두 사람은 카인과 아벨을 낳았다. 이를 시기한 릴리스는 카인을 꾀어 아벨을 해치게 만들었다. 이 일을 알게 된 이브가 릴리스와 맞붙었으나 두 사람 모두 목숨을 잃었고, 릴리스는 영혼만 남은 채 흩어졌다.</p></div>
     </div>
     <div class="wblock">
       <figure class="wblock__fig" style="margin:0"><img src="assets/world_w04.jpg" alt="" loading="lazy"></figure>
@@ -663,7 +691,7 @@ html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !importan
     <div class="wblock">
       <figure class="wblock__fig" style="margin:0"><img src="assets/world_w05.jpg" alt="" loading="lazy"></figure>
       <div class="wblock__txt"><span class="wblock__no">05</span><h3>봉인이 풀린 날</h3>
-        <p>뱀파이어 마스터들이 릴리스의 영혼이 봉인된 성지에 나타났다. 그들이 아담의 힘을 깨뜨리자 거대한 에너지가 터져 나왔고, 에슬라니아 전역에 결계가 내려앉았다. 그날 이후 이 땅에서 빠져나갈 길은 사라졌다.</p></div>
+        <p>어느 날 밤, 뱀파이어 마스터들이 아담의 봉인 앞에 나타났다. 그들이 아담의 힘을 깨뜨리자 거대한 에너지가 터져 나왔고, 에슬라니아 전역에 결계가 내려앉았다. 그날 이후 이 땅에서 빠져나갈 길은 사라졌다.</p></div>
     </div>
     <div class="wblock wblock--wide">
       <figure class="wblock__fig" style="margin:0">
@@ -672,11 +700,15 @@ html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !importan
           <img src="assets/world_w06_mo.jpg" alt="" loading="lazy">
         </picture>
       </figure>
-      <div class="wblock__txt"><span class="wblock__no">06</span><h3>에슬라니아의 두 진영</h3>
+      <div class="wblock__txt"><span class="wblock__no">06</span><h3>두 진영이 맞선 땅</h3>
         <p>여러 나라가 조사단과 진압단을 들여보냈지만 살아 나온 사람은 없었다. 한 남자가 오랜 노력 끝에 뱀파이어 말살 조직 E.V.E를 세웠고, 그가 길러 낸 슬레이어들이 처음으로 결계 안에 들어섰다. 릴리스의 힘을 차지하려는 뱀파이어 마스터들과 그들을 막으려는 슬레이어들이 같은 땅에서 부딪치기 시작했다. 에슬라니아의 하늘은 그날부터 <span class="ember">핏빛</span>이다.</p></div>
     </div>
   </div>
 </section>
+
+<!-- ══════════ class — 진영 탭 × 클래스 4 (화살표·스와이프·키보드) ══════════ -->
+
+<!-- ══════════ class — 진영 탭 × 클래스 4 (화살표·스와이프·키보드) ══════════ -->
 
 <!-- ══════════ class — 진영 탭 × 클래스 4 (화살표·스와이프·키보드) ══════════ -->
 
@@ -919,7 +951,7 @@ html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !importan
 </div>
 
 <!-- ══════════ 모바일 하단 고정 CTA ══════════ -->
-<div class="mobile-cta" data-shell="mobile-cta"><a class="btn btn--primary btn--block" href="#sec-pre">지금 사전예약하기</a></div>
+<div class="mobile-cta" data-shell="mobile-cta"><a class="btn btn--primary btn--block" href="#sec-pre-form">지금 사전예약하기</a></div>
 
 <script>
 (function(){
@@ -1041,6 +1073,40 @@ html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !importan
   modal.querySelector('[data-entry-close]').addEventListener('click', close);
   modal.addEventListener('click', function(e){ if (e.target === modal) close(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) close(); });
+})();
+</script>
+<script>
+/* ③ 추가 보상 스탬프 — 스토어·채널은 서버로 검증할 수 없다.
+   그래서 "받는 보상 N/4" 같은 카운터를 두지 않고, 본인이 눌렀다는 표시만 로컬에 남긴다. */
+(function(){
+  var stamps = [].slice.call(document.querySelectorAll('[data-stamp]'));
+  if (!stamps.length) return;
+  var KEY = 'de_stamp_';
+  stamps.forEach(function(card){
+    var id = card.dataset.stamp, done = card.querySelector('.stamp__done');
+    function mark(on){
+      card.classList.toggle('is-done', on);
+      if (done) done.hidden = !on;
+    }
+    var saved = false;
+    try { saved = localStorage.getItem(KEY + id) === '1'; } catch(e){}
+    mark(saved);
+    card.querySelectorAll('[data-stamp-hit]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        try { localStorage.setItem(KEY + id, '1'); } catch(e){}
+        mark(true); prog();
+      });
+    });
+  });
+
+  /* 「참여 n/3」 — 본인이 누른 트랙 수다. 받는 보상 개수가 아니다(보상은 ②로만 지급) */
+  var progEl = document.querySelector('[data-prog]');
+  function prog(){
+    if (!progEl) return;
+    var n = stamps.filter(function(c){ return c.classList.contains('is-done'); }).length;
+    progEl.textContent = '참여 ' + n + '/' + stamps.length;
+  }
+  prog();
 })();
 </script>
 </body>
