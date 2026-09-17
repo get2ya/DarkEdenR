@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko" data-shot="">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>다크에덴R — 티저 페이지 시안</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* ============================================================
+   티저 v3 (2026-09-17) — 1섹션: 프롤로그 루프 배경 + BI + 날짜 + 채널 2 + 푸터.
+   공유 컴포넌트는 base.css(무수정). GNB·R 디바이스·카피·하단 섹션은 Justin 지시로 제거.
+   배경: assets/teaser_bg.{webm,mp4} (프롤로그 3컷 86.6~94.4 / 98.0~105.8 / 108.3~118.9s 를 1초 디졸브로 이어 23.2초 루프, 꼬리 1초를 머리에 디졸브, 오디오 없음),
+         assets/teaser_bg.webp 는 reduced-motion·영상 실패 폴백.
+   ============================================================ */
+/* 넥슨 워헤이븐체 (무료·상업/웹 임베딩 허용·수정 금지, brand.nexon.com/ko/ci-brand-guidelines/typeface) — 자체 호스팅 */
+@font-face { font-family: "NexonWarhaven"; src: url("assets/fonts/WarhavenR.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "NexonWarhaven"; src: url("assets/fonts/WarhavenB.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+:root { --font-display: "NexonWarhaven", "Pretendard Variable", Pretendard, sans-serif; }
+
+.kv--teaser { align-items: center; padding-block: 6rem; }
+.kv--teaser .sec__bg::after {
+  background: linear-gradient(180deg, rgba(7,7,11,.32) 0%, rgba(7,7,11,.22) 45%, rgba(7,7,11,.72) 85%, var(--ink) 100%);
+}
+.sec__bg .kv__video { width: 100%; height: 100%; object-fit: cover; }
+.sec__bg .kv__still { display: none; width: 100%; height: 100%; object-fit: cover; }
+@media (prefers-reduced-motion: reduce) {
+  .sec__bg .kv__video { display: none; }
+  .sec__bg .kv__still { display: block; }
+}
+
+.kv__center { display: flex; flex-direction: column; align-items: center; gap: 2rem; text-align: center; }  /* grid 는 암시적 auto 트랙이라 % 폭이 줄어든다 → flex */
+/* BI: 애니메이션 없음, 정적 금빛 드롭섀도만. 원본 PNG(2655×1086)는 여백이 54%라 콘텐츠만 자른 lockup.png 사용 */
+.kv__bi { width: min(88%, 52rem); height: auto; filter: drop-shadow(0 0 3rem rgba(255,228,168,.28)); }
+@media (min-width: 767px)  { .kv__bi { width: min(80%, 72rem); } }
+@media (min-width: 1439px) { .kv__bi { width: min(56%, 76rem); } }
+
+.kv__date-xl { font-family: var(--font-display); font-size: 3.4rem; font-weight: 700; letter-spacing: .10em; color: var(--gold-hi); margin: 0; padding-left: .10em; /* 자간만큼 우측이 남아 시각 중심 보정 */
+  line-height: 1; text-shadow: 0 0 2.4rem rgba(224,169,59,.35); }
+@media (min-width: 767px) { .kv__date-xl { font-size: 4.6rem; } }
+
+.kv__channels { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center; }
+.kv__channels .btn { min-width: 16rem; border-color: rgba(224,169,59,.4); background: rgba(7,7,11,.5); color: var(--body);
+  transition: border-color .2s ease, background-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.kv__channels .btn:hover, .kv__channels .btn:focus-visible {
+  filter: none; border-color: var(--gold); background: rgba(224,169,59,.14); color: var(--white);
+  transform: translateY(-2px); box-shadow: 0 .8rem 2.4rem -1rem rgba(224,169,59,.55); }
+.kv__channels .btn:active { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .kv__channels .btn:hover { transform: none; } }
+
+/* 모바일 고정 CTA 가 없어졌으므로 푸터 하단 여백 축소 */
+.site-footer { padding-bottom: 4rem; }
+</style>
+</head>
+<body>
+
+<main>
+
+<!-- ===================== 1. main — 프롤로그 루프 + BI ===================== -->
+<section id="sec-main" class="sec kv kv--teaser" data-slot="main" aria-label="메인">
+  <div class="sec__bg">
+    <video class="kv__video" autoplay muted loop playsinline preload="auto" poster="assets/teaser_bg_poster.jpg" aria-hidden="true">
+      <source src="assets/teaser_bg.webm" type="video/webm">
+      <source src="assets/teaser_bg.mp4" type="video/mp4">
+    </video>
+    <img class="kv__still" src="assets/teaser_bg.webp" alt="" aria-hidden="true">
+  </div>
+  <div class="sec__inner kv__center">
+    <img class="kv__bi" src="assets/logo_darkedenR_lockup.png" alt="다크에덴R">
+    <p class="kv__date-xl">2026.10.15</p>
+    <div class="rule-gold" style="width:12rem;margin-inline:auto" aria-hidden="true"></div>
+    <div class="kv__channels">
+      <!-- 임시 링크(2026-09-17 Justin): 확정 시 href 만 교체 -->
+      <a class="btn btn--ghost" href="https://cafe.naver.com/darkedenmobile" target="_blank" rel="noopener">공식 커뮤니티</a>
+      <a class="btn btn--ghost" href="https://www.youtube.com/watch?v=Wz2qg3zJCtM" target="_blank" rel="noopener">공식 유튜브</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== 2. footer ===================== -->
+<footer class="site-footer" data-slot="footer">
+  <div class="sec__inner">
+    <p><a href="#">이용약관</a><a href="#"><b>개인정보처리방침</b></a><a href="#">확률형 아이템 정보</a><a href="#">고객센터</a></p>
+    <div class="rule-gold" style="margin:1.6rem 0;opacity:.35"></div>
+    <p>플레이웍스 주식회사 &nbsp;|&nbsp; 대표 김광열 &nbsp;|&nbsp; 사업자등록번호 <span class="t-num">220-87-53096</span></p>
+    <p>본 게임물에는 <b style="color:var(--body)">확률형 아이템</b>이 포함되어 있습니다. 확률 정보는 게임 내 및 공식 사이트에서 확인하실 수 있습니다.</p>
+    <p><span class="rating-mark">등급 심의 예정</span> &nbsp;본 페이지의 게임물은 등급분류를 받지 않았으며, 등급 표시는 분류 완료 후 게시됩니다.</p>
+    <p style="margin-top:1.2rem">© PLAYWORKS Corp. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>

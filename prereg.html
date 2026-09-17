@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>다크에덴R — 사전예약 (시안)</title>
+<link rel="stylesheet" href="base.css">
+<script>
+/* 페인트 전에 진영 테마를 심는다. React 조건부 렌더 금지 원칙과 동일 — CSS 전담. */
+(function(){
+  var q = new URLSearchParams(location.search);
+  var f = q.get('faction');
+  if (f !== 'slayer' && f !== 'vampire') { try { f = localStorage.getItem('de_faction'); } catch(e) { f = null; } }
+  if (f === 'slayer' || f === 'vampire') document.documentElement.setAttribute('data-faction', f);
+  if (q.get('shot') === 'clean') document.documentElement.setAttribute('data-shot', 'clean');
+  if (q.get('ratio') === 'pending') document.documentElement.setAttribute('data-ratio', 'pending');
+  if (q.get('still') === '1') document.documentElement.setAttribute('data-still', '1');
+  if (q.get('head') === 'master') document.documentElement.setAttribute('data-head', 'master');
+})();
+</script>
+<style>
+/* prereg 전용 규칙만. base.css 는 수정하지 않는다. */
+
+/* ============================================================
+   v1.0 (2026-09-17) 히어로·GNB 축소 — 티저 v0.9 / launch.html v1.0 과 동일 패턴
+   ============================================================ */
+@font-face { font-family: "NexonWarhaven"; src: url("assets/fonts/WarhavenR.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "NexonWarhaven"; src: url("assets/fonts/WarhavenB.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+:root { --font-display: "NexonWarhaven", "Pretendard Variable", Pretendard, sans-serif; }
+
+/* GNB — 로고·우상단 CTA 제거. 메뉴만 남기고 서체를 워헤이븐으로.
+   로고가 빠졌으므로 base.css 의 nav margin-left:4rem 을 0 으로 되돌린다 */
+.site-header nav { margin-left: 0; }
+.site-header nav a { font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; letter-spacing: .06em; transition: color .15s; }
+.site-header nav a:hover, .site-header nav a:focus-visible { color: var(--gold-hi); }
+/* 현재 보고 있는 섹션의 메뉴만 700 (자간은 400 과 동일하게 유지 — 폭 흔들림 방지) */
+.site-header nav a[aria-current="true"] { font-weight: 700; color: var(--white); }
+
+/* 고정 헤더 아래로 앵커가 숨지 않게 */
+html { scroll-behavior: smooth; }
+.sec, .site-footer { scroll-margin-top: var(--header-h); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ---------- main 영상 히어로 ---------- */
+.kv--video { min-height: 100svh; }
+.kv--video .sec__bg video,
+.kv--video .sec__bg img { width: 100%; height: 100%; object-fit: cover; }
+.kv--video .sec__bg::after {
+  background: linear-gradient(180deg, rgba(7,7,11,.32) 0%, rgba(7,7,11,.22) 45%, rgba(7,7,11,.72) 85%, var(--ink) 100%);
+}
+/* 배경 영상 — 전 기기 재생. 스틸은 reduced-motion 과 ?still=1 에서만 */
+.kv--video .kv__still { position: absolute; inset: 0; display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .kv--video .sec__bg video { display: none; }
+  .kv--video .kv__still { display: block; }
+}
+html[data-still] .kv--video .sec__bg video { display: none; }
+html[data-still] .kv--video .kv__still { display: block; }
+
+/* BI — 티저와 동일 규격. 콘텐츠 크롭본(1267×500), 애니메이션 없음 */
+.kv--video .kv__logo { width: min(88%, 52rem); margin-inline: auto; }
+.kv--video .kv__logo img { filter: drop-shadow(0 0 3rem rgba(255,228,168,.28)); }
+@media (min-width: 767px)  { .kv--video .kv__logo { width: min(80%, 72rem); } }
+@media (min-width: 1439px) { .kv--video .kv__logo { width: min(56%, 76rem); } }
+
+/* 헤드라인 — 워헤이븐 700. 금빛 광원은 BI 드롭섀도 하나뿐이므로 본문색 단색, 글로우 없음.
+   keep-all 이 없으면 390px 에서 「보이면 반드 / 시 죽인다!」로 단어 중간이 끊긴다 */
+.kv__master { margin-top: .4rem; font-family: var(--font-display); font-weight: 700; color: var(--body); word-break: keep-all; }
+
+/* 법정 문구는 전부 --mute */
+.kv__legal, .kv__legal a { color: var(--mute); font-size: 1rem; }
+.kv__legal .rating-mark, .site-footer .rating-mark { color: var(--mute); }
+
+/* 주 CTA 텍스트 — 바탕이 테마에 따라 바뀌므로 색도 함께 바꾼다 (M06·M10 실측 대비).
+   기본(진영 미선택) 바탕은 금빛 --accent=--gold → --ink 9.49:1  (--body 는 1.43:1 로 미달)
+   base.css 의 `.btn--gold { color: var(--ink) }` 와 같은 선례다. */
+.btn--primary { color: var(--ink); }
+/* 진영 선택 시 바탕이 종족색으로 바뀐다. 여기서는 --ink 가 무너지므로(뱀파이어 2.83:1)
+   순백으로 되돌린다 — 슬레이어 5.68:1 · 뱀파이어 7.11:1.
+   ⚠ '순백 정리'(히어로·게이트) 범위 안에서 --white 를 되살린 유일한 예외다.
+      대비 확보가 목적이며 히어로·게이트의 다른 자리로 넓히지 않는다.
+      (그 밖 섹션의 제목류 --white 는 이번 지시의 무수정 범위라 그대로 둔다.) */
+html[data-faction] .btn--primary { color: var(--white); }
+.gate { position: relative; margin-top: 0; }
+/* 단계 숫자 — 워헤이븐 B. 영문 STEP 라벨은 쓰지 않는다 */
+.step { display: inline-grid; place-items: center; width: 3.2rem; height: 3.2rem; margin-right: 1.2rem;
+  border-radius: 50%; border: 1px solid var(--gold-deep); background: rgba(224,169,59,.10);
+  font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--gold-hi);
+  letter-spacing: 0; vertical-align: .1em; }
+/* 선택 결과 한 줄 — 누르면 위 게이트로 돌아간다 */
+.pre-mine { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: .4rem 1.2rem;
+  width: 100%; margin-top: 1.6rem; padding: 1.2rem; background: none; border: 0; text-align: center; }
+.pre-mine__now { font-size: 1.4rem; color: var(--body); }
+.pre-mine__now b { color: var(--accent-glow); font-weight: 700; }
+.pre-mine__hint { font-size: 1.1rem; color: var(--mute); }
+.pre-mine:hover .pre-mine__hint { color: var(--body); }
+/* 2단계 헤드 — h2 보다 한 단 작게 */
+.pre-step2 { display: flex; align-items: center; justify-content: center; margin: 4.8rem 0 2.4rem;
+  font-family: var(--font-display); font-weight: 700; letter-spacing: 0; font-size: 2.4rem; color: var(--white); }
+.pre-sub { text-align: center; margin: 2.4rem 0 0; }
+.pre-foot { margin-top: 1.6rem; font-size: 1.1rem; color: var(--dim); text-align: center; line-height: 1.6; }
+/* 성향 테스트 — 헤드와 버튼 분리 */
+.fac__test { margin-top: 3.2rem; display: grid; gap: 1.6rem; justify-items: center; }
+.fac__test-h { font-family: var(--font-display); font-weight: 700; letter-spacing: 0; font-size: 1.9rem; color: var(--body); }
+@media (max-width: 766px) {
+  .step { width: 2.8rem; height: 2.8rem; margin-right: .8rem; font-size: 1.4rem; }
+  .pre-step2 { font-size: 1.9rem; margin: 3.6rem 0 2rem; }
+  .fac__test-h { font-size: 1.6rem; }
+  .gate__opts { gap: .8rem; }
+  .gate__opt { padding: 1.2rem 1rem; }
+  .gate__opt b { font-size: 1.6rem; }
+  .gate__opt span { font-size: 1.15rem; line-height: 1.4; margin-top: .3rem; }
+}
+.gate__opts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+@media (min-width: 767px) { .gate__opts { gap: 2.4rem; } }
+
+/* ── 모바일 main 전용: 인물 위로 콘텐츠가 올라오지 않게 세로 예산을 다시 짠다 ──
+   kv_main_mo.jpg 의 근경 어썰트는 얼굴이 캔버스 y46~56% 구간에 있다(M09 표 9-3 Z5).
+   상단 블록(로고·헤드·서브·날짜)은 38% 안에서 끝내고, 게이트는 56% 아래에서 시작시킨다.
+   게이트 판은 반투명으로 둬서 검·군단 실루엣이 비쳐 보이게 한다. */
+@media (max-width: 766px) {
+  /* 위아래로 갈라 붙이고 가운데를 비운다. 상단 = BI + 마스터 카피 / 하단 = 게이트 + CTA.
+     v1.0 에서 서브·D-day 가 빠지고 BI 가 커졌다 — 배분만 다시 잡는다.
+     ⚠ 딤은 .kv--video 규칙(티저 v0.9 와 동일)을 그대로 쓴다. 여기서 덮어쓰지 않는다. */
+  .kv { padding-block: calc(var(--header-h) + 1.2rem) 6rem; align-items: stretch; grid-template-rows: 1fr; }
+  /* BI → 헤드라인 → 게이트 → CTA → 법정 문구를 한 덩어리로 묶어 세로 가운데 정렬한다.
+     이전에는 `.gate { margin-top:auto }` 로 게이트를 바닥에 붙였는데, 서브·D-day 가 빠지면서
+     헤드라인과 게이트 사이에 181px 이 비었다(실측). 남는 여백을 위아래로 나눠 갖는다. */
+  .kv .sec__inner { display: flex; flex-direction: column; justify-content: center; }
+  .kv .t-head--xl { font-size: 4rem; }
+  .kv__copy { margin-top: 1.2rem; }
+  .kv__legal { margin-top: 1rem; font-size: .9rem; }
+  /* 국소 딤·금빛 광원을 BI·헤드라인 중심(≈30%)으로 올린다. 기본값(62%)은 게이트 뒤였다 */
+  .kv--video .local-dim { top: 44%; width: 60rem; height: 32rem; }
+  .kv .vanish { top: 42%; width: 30rem; height: 30rem; }
+  /* 모바일은 하단 고정 CTA 가 '지금 사전예약하기'를 상시 노출하므로 KV 안에서는 중복을 뺀다 */
+  .kv__cta { margin-top: 1.2rem; }
+  .kv__cta .btn { min-height: 4.4rem; font-size: 1.4rem; }
+  .kv__cta .btn--primary { display: none; }
+}
+/* 사전예약 섹션 카드와 같은 면(base.css `.card`)을 쓴다.
+   히어로에 있을 때는 영상이 비쳐야 해서 rgba(18,20,26,.72) 반투명이었는데,
+   섹션 배경은 정지 이미지라 불투명이 맞다. */
+.gate__opt { position: relative; text-align: left; background: var(--char); border: 1px solid var(--line); border-radius: .6rem;
+  padding: 1.8rem 2rem; color: var(--body); transition: border-color .15s, background .15s; }
+.gate__opt b { display: block; font-size: 2rem; font-weight: 800; color: var(--body); letter-spacing: -.02em; }
+.gate__opt span { display: block; font-size: 1.4rem; color: var(--mute); margin-top: .4rem; }
+.gate__opt[data-f="slayer"]:hover, .gate__opt[data-f="slayer"][aria-pressed="true"] { border-color: var(--sla); background: rgba(30,91,230,.10); }
+.gate__opt[data-f="vampire"]:hover, .gate__opt[data-f="vampire"][aria-pressed="true"] { border-color: var(--vam); background: rgba(176,18,32,.10); }
+.gate__note { font-size: 1rem; color: var(--mute); text-align: center; margin-top: 1.4rem; line-height: 1.5; }
+
+.ratio__mid { font-size: 1.1rem; letter-spacing: .16em; color: var(--dim); white-space: nowrap; }
+.ratio__num small { font-size: 1.6rem; margin-left: .2rem; }
+.ratio__bar { margin-top: 1.6rem; }
+.fac__meta { display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: space-between; margin-top: 1.6rem; font-size: 1.3rem; color: var(--mute); }
+.fac__mine { color: var(--accent-glow); font-weight: 700; }
+html:not([data-faction]) .fac__mine { display: none; }
+html[data-ratio="pending"] .fac__live { display: none; }
+.fac__pending { display: none; text-align: center; padding: 2.4rem 0; color: var(--mute); font-size: 1.4rem; }
+html[data-ratio="pending"] .fac__pending { display: block; }
+.fac__sample { margin-top: 2.4rem; border: 1px dashed var(--line); border-radius: .6rem; padding: 1.2rem 1.6rem; font-size: 1.1rem; color: var(--dim); }
+.fac__sample b { color: var(--mute); font-weight: 700; }
+
+.pre-toggle { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-bottom: 2.4rem; padding: 1.2rem 1.6rem; background: var(--char); border: 1px solid var(--line); border-radius: .6rem; font-size: 1.3rem; }
+.pre-toggle b { color: var(--accent-glow); }
+.pre-toggle .btn { min-height: 3.6rem; padding: 0 1.4rem; font-size: 1.3rem; margin-left: auto; }
+/* 부가 안내는 본 정보(내 종족)와 같은 줄에서 경쟁하지 않게 우하단으로 내린다 */
+.pre-toggle { position: relative; padding-bottom: 2.6rem; }
+.pre-toggle__hint { position: absolute; right: 1.6rem; bottom: .6rem; font-size: 1.1rem; color: var(--mute); }
+@media (max-width: 766px) { .pre-toggle__hint { position: static; width: 100%; text-align: right; }
+  .pre-toggle { padding-bottom: 1.2rem; } }
+.pre-card { display: flex; flex-direction: column; gap: 1.4rem; }
+.pre-card__no { font-size: 1.2rem; font-weight: 800; letter-spacing: .1em; color: var(--gold); }
+.pre-card h3 { font-size: 2rem; font-weight: 800; color: var(--white); margin: 0; letter-spacing: -.02em; }
+.pre-card p { margin: 0; font-size: 1.4rem; color: var(--mute); }
+.reward { display: flex; gap: 1.2rem; align-items: center; padding: 1.2rem; background: rgba(7,7,11,.5); border: 1px solid var(--line); border-radius: .4rem; }
+.reward__ph { flex: 0 0 auto; width: 5.6rem; height: 5.6rem; border-radius: .4rem; background: repeating-linear-gradient(45deg, #23262e, #23262e 6px, #1a1d24 6px, #1a1d24 12px); border: 1px dashed var(--steel); }
+.reward__txt { font-size: 1.2rem; line-height: 1.5; }
+.reward__txt b { display: block; color: var(--body); font-weight: 700; }
+.reward__txt i { font-style: normal; color: var(--dim); font-size: 1.1rem; }
+.field { display: flex; gap: .8rem; }
+.field input { flex: 1; min-width: 0; height: 5.2rem; padding: 0 1.4rem; background: rgba(7,7,11,.6); border: 1px solid var(--line); border-radius: .4rem; color: var(--white); font-size: 1.5rem; }
+.field input::placeholder { color: var(--dim); }
+.field .btn { flex: 0 0 auto; }
+.agree { display: flex; gap: .8rem; align-items: flex-start; font-size: 1.2rem; color: var(--mute); }
+.agree a { text-decoration: underline; color: var(--body); }
+.chan-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+.chan-row .btn { min-height: 4.4rem; font-size: 1.3rem; padding: 0 .8rem; }
+.pre-all { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2.4rem; padding: 1.6rem 2rem; border: 1px solid var(--gold-deep); border-radius: .6rem; background: rgba(224,169,59,.06); }
+.pre-all b { color: var(--gold-hi); font-weight: 800; }
+.pre-notice { margin-top: 2rem; font-size: 1.15rem; color: var(--dim); line-height: 1.7; }
+
+.week { display: flex; flex-direction: column; gap: .8rem; }
+.week__ph { height: 9rem; border-radius: .4rem; background: repeating-linear-gradient(45deg, #23262e, #23262e 6px, #1a1d24 6px, #1a1d24 12px); border: 1px dashed var(--steel); }
+.week h4 { margin: 0; font-size: 1.5rem; color: var(--white); font-weight: 700; }
+.week p { margin: 0; font-size: 1.2rem; color: var(--mute); }
+.week--open { border-color: color-mix(in srgb, var(--gold) 50%, var(--line)); }
+
+/* 매니페스토·미디어 카드는 base.css 의 공유 컴포넌트(.manifesto / .media-card)를 쓴다. 여기서는 사전예약 고유분만 추가. */
+/* ── PD 확정 서체 규칙 ──────────────────────────────────────
+   워헤이븐은 h2 · 섹션 서브 · 특징 라벨/문장 · 영문 디스플레이에만.
+   카드 본문·법정·폼·버튼 등 나머지 UI 는 Pretendard 유지. 한글 자간은 전부 0. */
+.sec:not(.kv) .sec__head h2,
+.sec:not(.kv) .sec__head .t-sub { font-family: var(--font-display); letter-spacing: 0; }
+.sec:not(.kv) .sec__head h2 { font-weight: 700; }
+.sec:not(.kv) .sec__head .t-sub { font-weight: 400; font-size: 1.9rem; }
+@media (max-width: 766px) {
+  /* 서브는 2줄 상한 — 넘치면 말줄임 대신 폭을 줄이도록 폰트만 내린다 */
+  .sec:not(.kv) .sec__head .t-sub { font-size: 1.7rem; }
+}
+
+/* 세력 섹션 서브 — 표본 부족(?ratio=pending)이면 「집계 중입니다」로 바꾼다 */
+.fac__sub--pending { display: none; }
+html[data-ratio="pending"] .fac__sub--live { display: none; }
+html[data-ratio="pending"] .fac__sub--pending { display: block; }
+/* 2단 그리드 — 1열 번호(고정 3.2rem) / 2열 라벨 위·문장 아래 (팀리드 최종 확정) */
+.manifesto__row { display: grid; grid-template-columns: 3.2rem 1fr; gap: 1.6rem; align-items: baseline; }
+.manifesto__no { width: auto; min-width: 0; white-space: nowrap; letter-spacing: 0;
+  font-family: var(--font-display); font-weight: 700; }
+.manifesto__body { display: block; }
+.manifesto__label { display: block; font-family: var(--font-display); font-weight: 700; letter-spacing: 0;
+  font-size: 1.5rem; color: var(--gold); margin-bottom: .6rem; }
+.manifesto__txt { display: block; font-family: var(--font-display); font-weight: 400; letter-spacing: 0;
+  font-size: 2rem; line-height: 1.6; color: var(--white); }
+@media (max-width: 766px) {
+  .manifesto__row { gap: 1.2rem; }
+  .manifesto__label { font-size: 1.4rem; }
+  .manifesto__txt { font-size: 1.7rem; }
+}
+
+@media (min-width: 767px) {
+}
+
+
+.media-wrap { max-width: 64rem; margin-inline: auto; }
+/* 영상 모달 — 프레임은 base.css `.modal` 계열. 여기서는 16:9 박스만 정의한다 */
+.modal__box { position: relative; }
+.modal__video { aspect-ratio: 16 / 9; background: #000; }
+.modal__video iframe { width: 100%; height: 100%; border: 0; display: block; }
+/* 응모 안내 모달 — 프레임은 base.css `.modal` 계열 재사용 */
+.entry-box { padding: 3.2rem 2.8rem; text-align: center; max-width: 44rem; }
+.entry-box__t { margin: 0 0 1.2rem; font-size: 2.2rem; font-weight: 800; color: var(--body); }
+.entry-box__p { margin: 0 0 2.4rem; font-size: 1.5rem; color: var(--mute); line-height: 1.6; }
+.entry-box__cta { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+
+/* ── 프롤로그 카드 v2(_snippets/media_card.html · M09-2) ── */
+/* 워헤이븐 Bold 는 21행 블록에 이미 선언돼 있어 스니펫 동봉분은 넣지 않는다 */
+.pcard {
+  position: relative; display: block; width: 100%; padding: 0; overflow: hidden;
+  background: var(--char); border: 1px solid var(--line); border-radius: .6rem;
+  color: inherit; cursor: pointer; text-align: left;
+  transition: border-color .15s ease;
+}
+.pcard:hover { border-color: var(--gold-deep); }
+.pcard:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; }
+
+/* 스틸 — 16:9 고정, 카드가 어느 폭에 들어가도 비율이 유지된다.
+   height:auto 필수 — <img height="900"> 속성이 CSS 높이로 먹혀 aspect-ratio 를 무시한다. */
+.pcard__still { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+
+/* 하단 스크림 — 캡션 가독 확보용. 이미지 위에만 깔고 버튼보다 아래에 둔다. */
+.pcard::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 38%;
+  background: linear-gradient(180deg, rgba(7,7,11,0), rgba(7,7,11,.78));
+  pointer-events: none; z-index: 1;
+}
+
+/* ---- 재생 버튼: 이미지 정중앙 고정 ---- */
+.pcard__play {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  z-index: 2; width: 6.4rem; height: 6.4rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(7,7,11,.55);
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 2.4rem -.4rem var(--gold), inset 0 0 1.2rem -.6rem var(--gold-hi);
+  transition: transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s ease, background .18s ease;
+}
+@media (min-width: 767px) { .pcard__play { width: 7.6rem; height: 7.6rem; } }
+/* 삼각형 — 광학 중심을 맞추려 살짝 오른쪽으로 민다(삼각형 무게중심은 좌측에 쏠린다) */
+.pcard__play::before {
+  content: ""; margin-left: .45rem;
+  border-style: solid; border-width: 1.1rem 0 1.1rem 1.8rem;
+  border-color: transparent transparent transparent var(--gold-hi);
+}
+@media (min-width: 767px) { .pcard__play::before { border-width: 1.3rem 0 1.3rem 2.2rem; } }
+.pcard:hover .pcard__play {
+  transform: translate(-50%, -50%) scale(1.06);
+  background: rgba(7,7,11,.42);
+  box-shadow: 0 0 3.6rem -.4rem var(--gold-hi), inset 0 0 1.2rem -.6rem var(--gold-hi);
+}
+.pcard:active .pcard__play { transform: translate(-50%, -50%) scale(1.02); }
+
+/* ---- 캡션: PROLOGUE + 러닝타임 ---- */
+.pcard__cap {
+  position: absolute; left: 1.8rem; bottom: 1.4rem; z-index: 2;
+  display: flex; align-items: baseline; gap: .8rem;
+}
+@media (min-width: 767px) { .pcard__cap { left: 2.4rem; bottom: 1.8rem; gap: 1rem; } }
+.pcard__cap b {
+  font-family: "NexonWarhaven", var(--font); font-weight: 700;
+  font-size: 1.6rem; letter-spacing: .08em; line-height: 1;
+  color: var(--gold-hi); text-shadow: 0 1px 8px rgba(7,7,11,.8);
+}
+@media (min-width: 767px) { .pcard__cap b { font-size: 2rem; } }
+/* 러닝타임은 본문 폰트(Pretendard) — 워헤이븐은 영문 라벨 전용이다 */
+.pcard__cap i {
+  font-family: var(--font); font-style: normal; font-weight: 600;
+  font-size: 1.2rem; letter-spacing: 0; line-height: 1;
+  color: var(--mute); text-shadow: 0 1px 8px rgba(7,7,11,.8);
+}
+@media (min-width: 767px) { .pcard__cap i { font-size: 1.3rem; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pcard, .pcard__play { transition: none; }
+  .pcard:hover .pcard__play { transform: translate(-50%, -50%); }
+}
+
+/* ── 파샬(_partial_world_class.html · M06) ──────────────── */
+/* ---------- world ---------- */
+.wblock { display: grid; gap: 1.6rem; margin-bottom: 4rem; }
+.wblock img { width: 100%; border-radius: .4rem; }
+.wblock h3 { margin: 0 0 1rem; font-size: 2.2rem; font-weight: 800; color: var(--white); letter-spacing: -.02em; }
+.wblock p { margin: 0; font-size: 1.45rem; line-height: 1.8; color: var(--body); }
+/* 블록 번호 — 섹션 내 금빛 금지(광원은 파티클뿐)이라 --gold 에서 내렸다 */
+.wblock__no { font-size: 1.1rem; letter-spacing: .16em; color: var(--mute); display: block; margin-bottom: .8rem; }
+.wblock--wide { grid-template-columns: 1fr !important; }
+.wblock--wide .wblock__fig { order: 0 !important; }
+
+/* 타이틀 3단 */
+.world__eyebrow { font-family: var(--font-display, "NexonWarhaven", "Pretendard Variable", Pretendard, sans-serif);
+  font-weight: 700; letter-spacing: .08em; }
+.world__sub { font-family: var(--font-display, "NexonWarhaven", "Pretendard Variable", Pretendard, sans-serif);
+  font-weight: 400; font-size: 1.9rem; line-height: 1.6; color: var(--body); margin: .8rem 0 0; word-break: keep-all; }
+
+/* 스크롤 진입 연출 — transform·opacity 만, filter 는 blur 만. 이동 40px */
+.wblock__fig { position: relative; opacity: 0; filter: blur(8px); transition: opacity .8s ease, filter .8s ease; }
+.wblock__txt > * { opacity: 0; transform: translateX(-40px); transition: opacity .6s ease, transform .6s ease; }
+.wblock:nth-child(even) .wblock__txt > * { transform: translateX(40px); }
+.wblock.is-in .wblock__fig { opacity: 1; filter: blur(0); }
+.wblock.is-in .wblock__txt > * { opacity: 1; transform: none; }
+.wblock.is-in .wblock__txt > *:nth-child(2) { transition-delay: 60ms; }
+.wblock.is-in .wblock__txt > *:nth-child(3) { transition-delay: 120ms; }
+/* 파티클 캔버스는 embers.js 가 .wblock__fig 안에 절대배치로 넣는다(위치·크기는 라이브러리가 관리).
+   여기서는 부모에 position:relative 만 보장한다 — 위 .wblock__fig 규칙 참조 */
+
+/* ---------- class ---------- */
+.cls__tabs { display: flex; gap: .8rem; margin-bottom: 1.2rem; }
+.cls__tabs button { flex: 1; min-height: 4.8rem; background: var(--char); border: 1px solid var(--line); border-radius: .4rem; color: var(--mute); font-weight: 700; font-size: 1.5rem; }
+.cls__tabs button[aria-selected="true"] { color: var(--white); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--char)); }
+.cls__ftag { text-align: center; font-size: 1.4rem; color: var(--gold-hi); margin: 0 0 2.4rem; transition: opacity .35s ease; }
+.cls__stage { display: grid; gap: 1.6rem; align-items: center; }
+
+.cls__viewer { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .8rem; touch-action: pan-y; }
+.cls__portrait { margin: 0; text-align: center; background: radial-gradient(ellipse at 50% 88%, rgba(224,169,59,.16), transparent 62%); }
+.cls__portrait img { width: min(72%, 32rem); margin-inline: auto; }
+.cls__nav { min-width: 4.8rem; min-height: 4.8rem; display: grid; place-items: center; border-radius: 50%;
+  background: rgba(7,7,11,.55); border: 1px solid var(--line); color: var(--body); font-size: 1.5rem; line-height: 1;
+  transition: border-color .15s, color .15s, background-color .15s; }
+.cls__nav:hover { border-color: var(--accent); color: var(--white); background: rgba(7,7,11,.75); }
+.cls__nav:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; }
+
+.cls__info h3 { margin: 0; font-size: 2.8rem; font-weight: 800; color: var(--white); letter-spacing: -.03em; }
+.cls__tag { font-size: 1.8rem; color: var(--accent-glow); font-weight: 700; margin: .6rem 0 1.2rem; }
+.cls__desc { font-size: 1.45rem; line-height: 1.8; color: var(--body); margin: 0; }
+.cls__index { display: flex; align-items: center; gap: .8rem; margin-top: 2rem; }
+.cls__dots { display: flex; gap: .5rem; }
+.cls__dots i { width: .7rem; height: .7rem; border-radius: 50%; background: var(--steel); transition: background-color .25s; }
+.cls__dots i.is-on { background: var(--accent-glow); }
+.cls__count { font-size: 1.15rem; color: var(--mute); letter-spacing: .08em; }
+
+/* 크로스페이드 0.35초 — 나갈 때만 .16s 로 짧게 잡아 연타해도 답답하지 않게 */
+.cls__portrait img, .cls__info h3, .cls__tag, .cls__desc { transition: opacity .35s ease, transform .35s ease; }
+.cls.is-swapping .cls__portrait img { opacity: 0; transform: translateY(.8rem); transition-duration: .16s; }
+.cls.is-swapping .cls__info h3,
+.cls.is-swapping .cls__tag,
+.cls.is-swapping .cls__desc { opacity: 0; transform: translateY(.4rem); transition-duration: .16s; }
+.cls.is-swapping .cls__ftag { opacity: 0; }
+
+/* 모바일 — 세계관 1열(이미지 위·텍스트 아래), 클래스 화살표는 이미지 위에 겹친다 */
+@media (max-width: 766px) {
+  .cls__viewer { grid-template-columns: 1fr; }
+  .cls__nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; }
+  .cls__nav--prev { left: .2rem; }
+  .cls__nav--next { right: .2rem; }
+}
+@media (min-width: 767px) {
+  .wblock { grid-template-columns: 1fr 1fr; align-items: center; gap: 3.2rem; margin-bottom: 6rem; }
+  .wblock:nth-child(even) .wblock__fig { order: 2; }
+  .cls__stage { grid-template-columns: 1fr 1fr; gap: 4rem; }
+  .cls__portrait img { width: min(88%, 38rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wblock__fig, .wblock__txt > * { opacity: 1 !important; filter: none !important; transform: none !important; transition: none !important; }
+  .cls__portrait img, .cls__info h3, .cls__tag, .cls__desc, .cls__ftag { transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+/* 스크린샷 모드(shot.mjs 가 html[data-shot] 을 심는다)에서는 진입 연출을 건너뛰고 최종 상태로 찍는다.
+   연출이 0.8초인데 캡처는 250ms 뒤에 찍혀 중간 프레임(거의 투명)이 박히기 때문이다 */
+html[data-shot] .wblock__fig,
+html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !important; transform: none !important; transition: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ 공통 셸: 헤더 ══════════ -->
+<header class="site-header" data-shell="header">
+  <nav>
+    <a href="#sec-main">홈</a><a href="#sec-event">이벤트</a><a href="#sec-manifesto">R 특징</a><a href="#sec-world">세계관</a><a href="#sec-class">클래스</a>
+  </nav>
+</header>
+
+<!-- ══════════ 1. main — KV + 진영 선택 게이트 ══════════ -->
+<section id="sec-main" class="sec kv kv--video" data-slot="main">
+  <div class="sec__bg">
+    <video autoplay muted loop playsinline preload="auto"
+           poster="assets/launch_prologue_poster.jpg" aria-hidden="true">
+      <source src="assets/launch_prologue_full.webm" type="video/webm">
+      <source src="assets/launch_prologue_full.mp4" type="video/mp4">
+    </video>
+    <!-- reduced-motion · ?still=1 에서만 노출되는 스틸 -->
+    <img class="kv__still" src="assets/launch_prologue_poster.jpg" alt="" aria-hidden="true">
+  </div>
+  <div class="local-dim" aria-hidden="true"></div>
+  <div class="vanish" aria-hidden="true"></div>
+  <div class="sec__inner">
+    <div class="kv__logo"><img src="assets/logo_darkedenR_lockup.png" alt="다크에덴R"></div>
+    <div class="kv__copy">
+      <!-- 임시 카피(전작), 확정 시 교체. ?head=master 로 확정 마스터 카피와 바꿔 볼 수 있다 -->
+      <h1 class="t-head t-head--xl kv__master" data-copy="temp">보이면 반드시 죽인다!</h1>
+      <script>
+      /* 요소 바로 뒤에서 교체한다 — 문서 끝 스크립트로 미루면 임시 카피가 한 프레임 비친다 */
+      (function(){ if (document.documentElement.dataset.head !== 'master') return;
+        var h = document.currentScript.previousElementSibling;
+        h.textContent = '종족 전쟁의 규칙이 바뀐다'; h.dataset.copy = 'master'; })();
+      </script>
+    </div>
+
+    <div class="kv__cta"><a class="btn btn--primary" href="#sec-pre">지금 사전예약하기</a></div>
+    <p class="kv__legal">본 게임에는 확률형 아이템이 포함되어 있습니다. <a href="/probability" style="text-decoration:underline">[확률형 아이템 정보]</a></p>
+  </div>
+</section>
+
+<!-- ══════════ 2. faction — 세력 현황 (신규 섹션) ══════════ -->
+<section id="sec-faction" class="sec sec--tight" data-slot="faction">
+  <!-- 신규 섹션 — 코드 추가 필요 -->
+  <div class="sec__inner">
+    <div class="sec__head center">
+      <span class="t-eyebrow ko">실시간 종족 현황</span>
+      <h2>지금 앞서는 종족</h2>
+      <p class="t-sub t-mute fac__sub--live">사전예약에 참여한 종족 비율입니다. 1분마다 갱신됩니다</p>
+      <p class="t-sub t-mute fac__sub--pending">집계 중입니다</p>
+    </div>
+
+    <div class="fac__live">
+      <div class="ratio">
+        <div class="ratio__num ratio__num--sla t-num">47.2<small>%</small></div>
+        <div class="ratio__mid">SLAYER · VAMPIRE</div>
+        <div class="ratio__num ratio__num--vam t-num">52.8<small>%</small></div>
+        <div class="ratio__bar"><i class="sla" style="width:47.2%"></i><i class="vam" style="width:52.8%"></i><i class="gap"></i></div>
+      </div>
+      <div class="fac__meta">
+        <span>1분마다 갱신 · 사전예약 완료 기준</span>
+        <span class="fac__mine">내 종족 <b data-mine-label>—</b></span>
+      </div>
+    </div>
+    <p class="fac__pending">집계 중입니다. 참여가 모이면 공개됩니다.</p>
+
+    <div class="card center fac__test">
+      <b class="fac__test-h">나는 슬레이어일까, 뱀파이어일까?</b>
+      <a class="btn btn--gold" href="/test">성향 테스트 시작</a>
+    </div>
+
+    <div class="fac__sample">
+      <b>상태 예시(개발 참고)</b> — 진영 합계 1,000명 미만이면 막대를 감추고 “집계 중”으로 대체한다.
+      집계 실패 시에도 블록 전체를 감춘다. <b>50% / 50% 또는 0% 표시 금지.</b> 순위·역전 문구도 쓰지 않는다.
+      확인: <a href="?ratio=pending" style="text-decoration:underline">?ratio=pending</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 3. pre — 3분할 카드 ══════════ -->
+<section id="sec-pre" class="sec" data-slot="pre">
+  <div class="sec__bg"><img src="assets/bg_pre.jpg" alt=""></div>
+  <div class="sec__inner">
+    <div class="sec__head center">
+      <span class="t-eyebrow ko">사전예약</span>
+      <h2><b class="step">1</b>당신의 종족을 선택하세요</h2>
+    </div>
+
+    <!-- 신규 요소 — 진영 선택 게이트 (히어로에서 이동) -->
+    <div class="gate">
+      <div class="gate__opts">
+        <button class="gate__opt" data-f="slayer" aria-pressed="false">
+          <b>SLAYER</b><span>함께 싸울수록 강해지는 종족</span>
+        </button>
+        <button class="gate__opt" data-f="vampire" aria-pressed="false">
+          <b>VAMPIRE</b><span>혼자서도 압도하는 종족</span>
+        </button>
+      </div>
+      <p class="gate__note">
+        사전예약 진영 선택은 이벤트 참여용이며, 게임 내 종족·서버 선택을 제한하지 않습니다.
+      </p>
+    </div>
+
+    <!-- 선택 결과 한 줄. 클릭하면 위 게이트로 돌아간다 -->
+    <button class="pre-mine" type="button" data-mine-jump>
+      <span class="pre-mine__now">내 종족 <b data-mine-label>선택 안 함</b></span>
+      <span class="pre-mine__hint">사전예약 완료 전까지 변경할 수 있습니다.</span>
+    </button>
+
+    <h3 class="pre-step2"><b class="step">2</b>3가지 방법으로 참여하세요</h3>
+
+    <div class="grid grid--3">
+      <!-- 카드 ① 스토어 -->
+      <div class="card pre-card">
+        <span class="pre-card__no">01</span>
+        <h3>스토어 사전예약</h3>
+        <p>앱마켓에서 사전예약하고 출시 알림을 받으세요</p>
+        <div class="chan-row">
+          <button class="btn btn--ghost">App Store</button>
+          <button class="btn btn--ghost">Google Play</button>
+          <button class="btn btn--ghost">원스토어</button>
+        </div>
+        <div class="reward">
+          <div class="reward__ph" aria-hidden="true"></div>
+          <div class="reward__txt"><b>개조 재료 상자 ×20 · 보석 상자 ×5 확정 지급</b><i>보상 아이콘 — 클라이언트 원본 대기</i></div>
+        </div>
+      </div>
+
+      <!-- 카드 ② 문자인증 -->
+      <div class="card card--accent pre-card">
+        <span class="pre-card__no">02</span>
+        <h3>휴대폰 사전예약</h3>
+        <p>휴대폰 인증만 하면 가장 큰 보상을 드립니다</p>
+        <div class="field">
+          <input type="tel" inputmode="numeric" placeholder="휴대폰 번호 ( - 없이)" aria-label="휴대폰 번호">
+          <button class="btn btn--primary">인증번호</button>
+        </div>
+        <div class="field">
+          <input type="text" inputmode="numeric" placeholder="인증번호 6자리" aria-label="인증번호">
+          <button class="btn btn--ghost">확인</button>
+        </div>
+        <label class="agree"><input type="checkbox"> <span>[필수] 개인정보 수집·이용 동의 <a href="#">자세히</a></span></label>
+        <label class="agree"><input type="checkbox"> <span>[선택] 광고성 정보 수신 동의 <a href="#">자세히</a></span></label>
+        <div class="reward">
+          <div class="reward__ph" aria-hidden="true"></div>
+          <div class="reward__txt"><b>사전예약 전용 변신 1종 · 개조 재료 ×30 · 즉시이동권 ×30 확정 지급</b><i>보상 아이콘 — 클라이언트 원본 대기</i></div>
+        </div>
+        <button class="btn btn--primary btn--block">사전예약 완료하기</button>
+      </div>
+
+      <!-- 카드 ③ SNS -->
+      <div class="card pre-card">
+        <span class="pre-card__no">03</span>
+        <h3>채널 구독</h3>
+        <p>공식 채널을 구독하고 이벤트 소식을 가장 먼저 받아보세요</p>
+        <div class="chan-row">
+          <button class="btn btn--ghost">카카오</button>
+          <button class="btn btn--ghost">유튜브</button>
+          <button class="btn btn--ghost">카페</button>
+        </div>
+        <div class="reward">
+          <div class="reward__ph" aria-hidden="true"></div>
+          <div class="reward__txt"><b>즉시이동권 ×20 · 제자리부활권 ×10 확정 지급</b><i>보상 아이콘 — 클라이언트 원본 대기</i></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="t-sub t-mute pre-sub">스토어 사전예약과 채널 추가까지 하시면 출시 알림과 당첨 안내를 먼저 받으실 수 있습니다</p>
+
+    <div class="pre-all">
+      <div class="reward__ph" aria-hidden="true"></div>
+      <div><b>휴대폰 사전예약 완료 시 보상 4종 전원 지급!</b>
+        <div class="t-mute" style="font-size:1.2rem">전체 참여 추가 보상 — 펫 1종 · 도감 등록 재료 확정 지급! <i style="font-style:normal;color:var(--dim)">(아이콘 원본 대기)</i></div>
+      </div>
+    </div>
+
+    <p class="pre-notice">
+      · 모든 보상은 확정 지급이며 뽑기가 아닙니다. · 사전예약 전용 보상은 출시 후 게임 내 우편으로 드립니다.<br>
+      · 인증한 휴대폰 번호 1개당 1회 참여할 수 있습니다. · 개인정보는 사전예약 안내 목적으로만 사용하며 목적 달성 후 파기합니다.<br>
+      · 문자 발송은 위탁 업체가 대행하며, 업체명은 페이지 하단에 표기합니다. <a href="#" style="text-decoration:underline">사전예약 유의사항 전문</a>
+    </p>
+
+    <p class="pre-foot">종족은 선택하지 않아도 참여할 수 있으며, 사전예약 집계용으로 게임 내 선택과는 무관합니다.</p>
+  </div>
+</section>
+
+<!-- ══════════ 4. event — 럭키드로우 ══════════ -->
+<section id="sec-event" class="sec" data-slot="event">
+  <div class="sec__bg"><img src="assets/bg_event.jpg" alt=""></div>
+  <div class="sec__inner">
+    <div class="sec__head center">
+      <span class="t-eyebrow ko">이벤트</span>
+      <h2>럭키 드로우</h2>
+      <p class="t-sub t-mute">매주 응모하고 경품을 받아가세요! 당첨자는 매주 수요일 18시에 개별 안내드립니다.</p>
+    </div>
+
+    <div class="grid grid--3">
+      <div class="card week week--open"><div class="week__ph"></div><span class="badge badge--accent">진행 중</span><h4>1주차</h4><p>{{경품명}} {{수량}}명 추첨!</p><button class="btn btn--primary btn--block" type="button" data-entry-open>이번 주 응모하기</button></div>
+      <div class="card week"><div class="week__ph"></div><span class="badge">예정</span><h4>2주차</h4><p>{{경품명}} {{수량}}명 추첨!</p></div>
+      <div class="card week"><div class="week__ph"></div><span class="badge">예정</span><h4>3주차</h4><p>{{경품명}} {{수량}}명 추첨!</p></div>
+      <div class="card week"><div class="week__ph"></div><span class="badge">예정</span><h4>4주차</h4><p>{{경품명}} {{수량}}명 추첨!</p></div>
+      <div class="card week"><div class="week__ph"></div><span class="badge">예정</span><h4>5주차</h4><p>{{경품명}} {{수량}}명 추첨!</p></div>
+      <div class="card week"><div class="week__ph"></div><span class="badge badge--gold">발표</span><h4>6주차</h4><p>{{경품명}} {{수량}}명 추첨!</p></div>
+    </div>
+    <p class="pre-notice">· 주차별 1회 응모할 수 있습니다. <a href="#" style="text-decoration:underline">이벤트 유의사항</a></p>
+  </div>
+</section>
+
+<!-- ══════════ 5. manifesto — 규칙 매니페스토 (신규 섹션) ══════════ -->
+<section id="sec-manifesto" class="sec sec--tight" data-slot="manifesto">
+  <!-- 신규 섹션 — 코드 추가 필요 -->
+  <div class="sec__inner">
+    <div class="sec__head center">
+      <span class="t-eyebrow ko">특징</span>
+      <h2>다크에덴R에서 달라지는 6가지</h2>
+    </div>
+    <div class="manifesto">
+      <!-- 라벨·설명은 카피북 v2.2 §8 175~182행 확정 문구.
+           ⚠ 카피북은 "1주차 시점 = 01·02만 공개"였으나 Justin 2차 지시로 6개 전부 공개로 전환(2026-09-17). -->
+      <div class="rule-gold"></div>
+      <div class="manifesto__row"><span class="manifesto__no">01</span><span class="manifesto__body"><b class="manifesto__label">종족 단일 서버</b><span class="manifesto__txt">한 서버에는 한 종족만 접속 가능합니다</span></span></div>
+      <div class="manifesto__row"><span class="manifesto__no">02</span><span class="manifesto__body"><b class="manifesto__label">서버 대 서버 전쟁</b><span class="manifesto__txt">전쟁은 개인이 아니라 서버 단위로 벌어집니다</span></span></div>
+      <div class="manifesto__row"><span class="manifesto__no">03</span><span class="manifesto__body"><b class="manifesto__label">매주 수요일 성서전</b><span class="manifesto__txt">매주 수요일, 12개의 성서를 두고 두 종족이 겨룹니다</span></span></div>
+      <div class="manifesto__row"><span class="manifesto__no">04</span><span class="manifesto__body"><b class="manifesto__label">승리 종족 전원 보상</b><span class="manifesto__txt">승리한 종족 전원에게 보상이 지급됩니다</span></span></div>
+      <div class="manifesto__row"><span class="manifesto__no">05</span><span class="manifesto__body"><b class="manifesto__label">1서버 1캐릭터</b><span class="manifesto__txt">서버당 하나의 캐릭터만 플레이 가능합니다</span></span></div>
+      <div class="manifesto__row"><span class="manifesto__no">06</span><span class="manifesto__body"><b class="manifesto__label">장비 레벨 제한 해제</b><span class="manifesto__txt">장비는 레벨 제한 없이 바로 착용 가능합니다</span></span></div>
+      <div class="rule-gold"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 6. world — 세계관 6블록 ══════════ -->
+<section id="sec-world" class="sec" data-slot="world">
+  <div class="sec__inner">
+    <div class="sec__head center">
+      <span class="t-eyebrow world__eyebrow" lang="en">DARK EDEN SYNOPSIS</span>
+      <h2>종족 전쟁의 기원</h2>
+      <p class="world__sub">에덴이 잠긴 날부터 에슬라니아의 결계까지 6장면으로 담았습니다</p>
+    </div>
+
+    <div class="wblock" data-ember>
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w01.jpg" alt=""></figure>
+      <div class="wblock__txt"><span class="wblock__no">01</span><h3>낙원과 금단의 열매</h3>
+        <p>신은 에덴에 낙원을 만들고 아담과 릴리스를 그곳에 두었다. 낙원에는 금단의 열매에 손대지 않는다는 규칙 하나가 있었지만, 릴리스는 기어이 그 열매를 찾아냈고 창조의 이치를 깨달았다.</p></div>
+    </div>
+    <div class="wblock">
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w02.jpg" alt="" loading="lazy"></figure>
+      <div class="wblock__txt"><span class="wblock__no">02</span><h3>열두 형상과 추방</h3>
+        <p>릴리스는 열두 개의 형상을 빚어 하나하나에 생명을 불어넣었다. 신은 크게 노해 그들을 낙원 밖으로 내쫓고 빛의 축복마저 거두었다. 빛을 잃은 그들에게는 밤만이 남았다.</p></div>
+    </div>
+    <div class="wblock">
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w03.jpg" alt="" loading="lazy"></figure>
+      <div class="wblock__txt"><span class="wblock__no">03</span><h3>낙원 밖에서 흘린 첫 피</h3>
+        <p>신은 아담에게 이브를 주었고, 두 사람 사이에서 카인과 아벨이 태어났다. 이를 시기한 릴리스는 카인을 꾀어 아벨을 해치게 만들었다. 이 일을 알게 된 이브가 릴리스와 맞붙었으나 두 사람 모두 목숨을 잃었고, 릴리스는 영혼만 남은 채 흩어졌다.</p></div>
+    </div>
+    <div class="wblock">
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w04.jpg" alt="" loading="lazy"></figure>
+      <div class="wblock__txt"><span class="wblock__no">04</span><h3>아담의 봉인</h3>
+        <p>절망한 아담은 릴리스의 영혼을 거두어 에덴 안에 가두었다. 그리고 자기 자신을 열쇠로 삼아 에덴의 문을 영원히 잠갔다. 그 뒤로 수백 년 동안 아무도 그 문을 열지 못했다.</p></div>
+    </div>
+    <div class="wblock">
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w05.jpg" alt="" loading="lazy"></figure>
+      <div class="wblock__txt"><span class="wblock__no">05</span><h3>봉인이 풀린 날</h3>
+        <p>뱀파이어 마스터들이 릴리스의 영혼이 봉인된 성지에 나타났다. 그들이 아담의 힘을 깨뜨리자 거대한 에너지가 터져 나왔고, 에슬라니아 전역에 결계가 내려앉았다. 그날 이후 이 땅에서 빠져나갈 길은 사라졌다.</p></div>
+    </div>
+    <div class="wblock wblock--wide">
+      <figure class="wblock__fig" style="margin:0">
+        <picture>
+          <source media="(min-width: 767px)" srcset="assets/world_w06.jpg">
+          <img src="assets/world_w06_mo.jpg" alt="" loading="lazy">
+        </picture>
+      </figure>
+      <div class="wblock__txt"><span class="wblock__no">06</span><h3>에슬라니아의 두 진영</h3>
+        <p>여러 나라가 조사단과 진압단을 들여보냈지만 살아 나온 사람은 없었다. 한 남자가 오랜 노력 끝에 뱀파이어 말살 조직 E.V.E를 세웠고, 그가 길러 낸 슬레이어들이 처음으로 결계 안에 들어섰다. 릴리스의 힘을 차지하려는 뱀파이어 마스터들과 그들을 막으려는 슬레이어들이 같은 땅에서 부딪치기 시작했다. 에슬라니아의 하늘은 그날부터 <span class="ember">핏빛</span>이다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ class — 진영 탭 × 클래스 4 (화살표·스와이프·키보드) ══════════ -->
+
+<!-- ══════════ class — 진영 탭 × 클래스 4 (화살표·스와이프·키보드) ══════════ -->
+
+<!-- ══════════ class — 진영 탭 × 클래스 4 (화살표·스와이프·키보드) ══════════ -->
+
+<!-- ══════════ 7. class — 진영 탭 × 클래스 4 ══════════ -->
+<section id="sec-class" class="sec" data-slot="class">
+  <div class="sec__inner">
+    <div class="sec__head center"><span class="t-eyebrow ko">클래스</span><h2>나에게 맞는 클래스를 찾아보세요</h2></div>
+
+    <div class="cls">
+      <div class="cls__tabs" role="tablist">
+        <button role="tab" data-f="slayer" aria-selected="true">슬레이어</button>
+        <button role="tab" data-f="vampire" aria-selected="false">뱀파이어</button>
+      </div>
+      <p class="cls__ftag" data-ftag>한 명씩은 약하지만, 네 직업이 서로의 빈자리를 메웁니다</p>
+
+      <div class="cls__stage">
+        <div class="cls__viewer" role="group" aria-label="클래스 보기">
+          <button class="cls__nav cls__nav--prev" type="button" aria-label="이전 클래스">&#9664;</button>
+          <figure class="cls__portrait"><img data-cls-img src="assets/class_assault@2x.png" alt="어썰트"></figure>
+          <button class="cls__nav cls__nav--next" type="button" aria-label="다음 클래스">&#9654;</button>
+        </div>
+        <div class="cls__info">
+          <h3 data-cls-name>어썰트</h3>
+          <p class="cls__tag" data-cls-tag>도와 대검으로 전선을 여는 근접 딜러</p>
+          <p class="cls__desc" data-cls-desc>도와 대검을 함께 쓰며 적과 가장 가까운 자리에서 싸웁니다. 먼저 부딪쳐 적을 붙잡아 두는 동안 뒤쪽 세 직업이 공격을 준비합니다.</p>
+          <p class="cls__index">
+            <span class="cls__dots" data-cls-dots aria-hidden="true"></span>
+            <span class="cls__count" data-cls-count aria-live="polite">1 / 4</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- 클래스 8종 데이터. 썸네일 열을 없앴으므로 화면에 나오지 않는 데이터 보관용이다 -->
+      <div class="cls__data" hidden>
+        <span data-f="slayer" data-id="assault" data-name="어썰트" data-tag="도와 대검으로 전선을 여는 근접 딜러" data-desc="도와 대검을 함께 쓰며 적과 가장 가까운 자리에서 싸웁니다. 먼저 부딪쳐 적을 붙잡아 두는 동안 뒤쪽 세 직업이 공격을 준비합니다."></span>
+        <span data-f="slayer" data-id="chaser" data-name="체이서" data-tag="총으로 먼 거리에서 표적을 끊는 사수" data-desc="총을 들고 전선 뒤쪽에서 표적을 하나씩 정리합니다. 파고드는 적을 먼저 끊어 내 앞선 동료가 버틸 시간을 만듭니다."></span>
+        <span data-f="slayer" data-id="titan" data-name="타이탄" data-tag="메이스로 적진을 밀어붙이는 돌격형" data-desc="거대한 메이스를 휘두르며 적진 한가운데로 파고듭니다. 맷집이 두터워 길을 여는 역할을 맡고, 뚫린 자리로 동료가 따라 들어옵니다."></span>
+        <span data-f="slayer" data-id="valkyrie" data-name="발키리" data-tag="보우로 넓은 사거리를 담당하는 궁수" data-desc="기계식 보우로 전장 전체를 사거리 안에 둡니다. 전황을 살피다가 아군이 밀리는 쪽을 먼저 지원합니다."></span>
+        <span data-f="vampire" data-id="bloodwalker" data-name="블러드워커" data-tag="클로로 순식간에 파고드는 속공형" data-desc="양손 클로를 들고 거리를 좁혀 단숨에 달려듭니다. 짧은 시간에 피해를 몰아넣어 상대가 대응하기 전에 끝냅니다."></span>
+        <span data-f="vampire" data-id="darkeye" data-name="다크아이" data-tag="샙터로 적을 묶어 두는 원거리 마법사" data-desc="마법구가 달린 샙터로 거리를 둔 채 마법을 겁니다. 적을 묶어 둔 뒤 그대로 무너뜨리는 데까지 혼자 해냅니다."></span>
+        <span data-f="vampire" data-id="demonica" data-name="데모니카" data-tag="대낫으로 여럿을 한 번에 베는 광역형" data-desc="자기 몸집만 한 대낫을 크게 휘둘러 주변을 쓸어 냅니다. 여럿에게 둘러싸일수록 오히려 위력이 커집니다."></span>
+        <span data-f="vampire" data-id="occultist" data-name="오컬티스트" data-tag="펜듈럼으로 적을 약하게 만드는 주술사" data-desc="펜듈럼으로 주술을 걸어 상대의 힘을 깎아 냅니다. 약해진 적을 끝까지 몰아붙이는 일도 직접 맡습니다."></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- 금빛 입자 라이브러리 — 파샬 스크립트가 window.mountEmberReveal 을 찾으므로 먼저 로드한다 -->
+<script src="_snippets/embers.js"></script>
+<script>
+/* ── class: 진영 탭 + 화살표·스와이프·키보드 순환 (이 마크업이 있을 때만 동작) ── */
+(function(){
+  var root = document.querySelector('#sec-class .cls');
+  if (!root) return;
+
+  var tabs   = [].slice.call(root.querySelectorAll('.cls__tabs button'));
+  var data   = [].slice.call(root.querySelectorAll('.cls__data span'));
+  var ftag   = root.querySelector('[data-ftag]');
+  var imgEl  = root.querySelector('[data-cls-img]');
+  var nameEl = root.querySelector('[data-cls-name]');
+  var tagEl  = root.querySelector('[data-cls-tag]');
+  var descEl = root.querySelector('[data-cls-desc]');
+  var dotsEl = root.querySelector('[data-cls-dots]');
+  var cntEl  = root.querySelector('[data-cls-count]');
+  var viewer = root.querySelector('.cls__viewer');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var FTAG = { slayer: '한 명씩은 약하지만, 네 직업이 서로의 빈자리를 메웁니다', vampire: '신의 피를 이어받아, 한 명 한 명이 그 자체로 전력입니다' };
+  var faction = 'slayer', index = 0, timer = null;
+
+  function list(){ return data.filter(function(d){ return d.dataset.f === faction; }); }
+
+  function paint(){
+    var items = list(), d = items[index];
+    if (!d) return;
+    imgEl.src = 'assets/class_' + d.dataset.id + '@2x.png';
+    imgEl.alt = d.dataset.name;
+    nameEl.textContent = d.dataset.name;
+    tagEl.textContent  = d.dataset.tag;
+    descEl.textContent = d.dataset.desc;
+    if (ftag) ftag.textContent = FTAG[faction];
+    cntEl.textContent = (index + 1) + ' / ' + items.length;
+    [].forEach.call(dotsEl.children, function(dot, i){ dot.classList.toggle('is-on', i === index); });
+  }
+
+  /* 0.35초 크로스페이드: 나갈 때 .16s → 교체 → 들어올 때 .35s */
+  function swap(){
+    if (reduce) { paint(); return; }
+    clearTimeout(timer);
+    root.classList.add('is-swapping');
+    timer = setTimeout(function(){ paint(); root.classList.remove('is-swapping'); }, 170);
+  }
+  function step(delta){ var n = list().length; index = (index + delta + n) % n; swap(); }
+  function selectTab(f){
+    faction = f; index = 0;                       /* 탭 전환 시 첫 캐릭터로 */
+    tabs.forEach(function(t){ t.setAttribute('aria-selected', String(t.dataset.f === f)); });
+    swap();
+  }
+
+  list().forEach(function(){ dotsEl.appendChild(document.createElement('i')); });
+
+  tabs.forEach(function(t){ t.addEventListener('click', function(){ selectTab(t.dataset.f); }); });
+  root.querySelector('.cls__nav--prev').addEventListener('click', function(){ step(-1); });
+  root.querySelector('.cls__nav--next').addEventListener('click', function(){ step(1); });
+
+  /* 터치 스와이프 — 가로 40px 이상이고 세로보다 클 때만(세로 스크롤 우선) */
+  var sx = null, sy = null;
+  viewer.addEventListener('touchstart', function(e){ var t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; }, { passive: true });
+  viewer.addEventListener('touchend', function(e){
+    if (sx === null) return;
+    var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    sx = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy)) return;
+    step(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  /* 키보드 ← → : 클래스 섹션이 화면에 보일 때만, 입력 요소에 포커스가 없을 때만 */
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
+    var r = document.getElementById('sec-class').getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) return;
+    e.preventDefault();
+    step(e.key === 'ArrowLeft' ? -1 : 1);
+  });
+
+  var pre = document.documentElement.getAttribute('data-faction');
+  selectTab(pre === 'vampire' ? 'vampire' : 'slayer');
+})();
+
+/* ── world: 스크롤 진입 연출 + 01 블록 ember 파티클 ── */
+(function(){
+  var blocks = [].slice.call(document.querySelectorAll('#sec-world .wblock'));
+  if (!blocks.length) return;
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* 01 블록 금빛 입자 수렴 — `_snippets/embers.js`(전역 window.mountEmberReveal, ES 모듈 아님).
+     게이팅은 라이브러리가 전담한다: reduced-motion · hardwareConcurrency ≤ 4 · once(세션 1회) ·
+     ≤768px 입자 자동 감산 · DPR 상한. 여기서 중복 검사하지 않는다.
+     duration 1300ms(이동) + 크로스페이드 500ms = 1800ms — PD 상한과 같다.
+     ⚠ file:// 로 열면 브라우저가 캔버스 픽셀 읽기를 막아 밝기 샘플링이 안 되고 중앙 가중 폴백으로 돈다
+        (형상이 이미지 윤곽을 따르지 않을 뿐 깨지지는 않는다). http 로 서빙하면 정상. 반환값 .sampled 로 확인. */
+  function mountEmber(block){
+    var img = block.querySelector('img');
+    if (!img) return;
+    var tries = 0;
+    (function wait(){
+      if (typeof window.mountEmberReveal === 'function') {
+        try {
+          window.mountEmberReveal(img, {
+            count: 3500,
+            color: '#E0A93B',
+            duration: 1300,
+            once: true,
+            /* 캡처 모드에서는 파티클을 돌리지 않고 최종 상태로 둔다 */
+            fallback: document.documentElement.hasAttribute('data-shot')
+          });
+        } catch (e) {}
+        return;
+      }
+      if (++tries > 15) return;                                     /* 15 × 200ms = 3초 */
+      setTimeout(wait, 200);
+    })();
+  }
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    blocks.forEach(function(b){ b.classList.add('is-in'); });
+    return;
+  }
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-in');
+      io.unobserve(e.target);
+      if (e.target.hasAttribute('data-ember')) mountEmber(e.target);
+    });
+  }, { threshold: .18, rootMargin: '0px 0px -8% 0px' });
+  blocks.forEach(function(b){ io.observe(b); });
+})();
+</script>
+
+<!-- ══════════ 8. media — 영상 ══════════ -->
+<section id="sec-media" class="sec sec--tight" data-slot="media">
+  <div class="sec__inner">
+    <div class="sec__head center"><span class="t-eyebrow ko">영상</span><h2>프롤로그</h2></div>
+    <div class="media-wrap">
+      <button class="pcard" type="button" data-video data-video-open data-video-id="Wz2qg3zJCtM" aria-label="프롤로그 영상 재생">
+  <img class="pcard__still" src="assets/prologue_card_poster.jpg" alt="" width="1600" height="900" decoding="async">
+  <span class="pcard__play" aria-hidden="true"></span>
+  <span class="pcard__cap"><b lang="en">PROLOGUE</b><i>2분 10초</i></span>
+</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 9. footer ══════════ -->
+<footer class="site-footer" data-shell="footer">
+  <div class="sec__inner">
+    <p><strong style="color:var(--body)">플레이웍스(주)</strong> | 대표 김광열 | 사업자등록번호 220-87-53096 | 통신판매업신고 {{통신판매업신고번호}} | 주소 {{주소}}</p>
+    <p>개인정보 보호책임자 {{개인정보보호책임자}} | 고객센터 {{고객센터메일}}</p>
+    <p>개인정보 처리위탁 — 문자 발송: {{수탁사}} (사전예약 안내 문자 발송 업무)</p>
+    <p style="margin-top:1.2rem">
+      <a href="/terms">이용약관</a><a href="/privacy"><strong>개인정보처리방침</strong></a><a href="/probability">확률형 아이템 정보</a><a href="#">사전예약 유의사항</a><a href="#">이벤트 유의사항</a>
+    </p>
+    <p style="margin-top:1.2rem">본 게임에는 확률형 아이템이 포함되어 있습니다.</p>
+    <p class="t-mute">등급 표기는 등급분류 완료 후 표시합니다. (사전예약 단계 미표기)</p>
+    <p style="margin-top:1.2rem">© 플레이웍스(주). All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- ══════════ 응모 안내 모달 ══════════ -->
+<!-- 안내문·링크 모두 PD 확정 전 임시값 -->
+<div class="modal" id="modal-entry" hidden role="dialog" aria-modal="true" aria-labelledby="entry-t">
+  <div class="modal__box entry-box">
+    <h3 id="entry-t" class="entry-box__t">공식 커뮤니티로 이동</h3>
+    <p class="entry-box__p">응모는 공식 커뮤니티의 이벤트 게시글에서 진행됩니다. 게시글 안내에 따라 참여하시면 응모가 완료됩니다.</p>
+    <div class="entry-box__cta">
+      <a class="btn btn--primary" href="https://cafe.naver.com/darkedenmobile" target="_blank" rel="noopener noreferrer">응모하러 가기</a>
+      <button class="btn btn--ghost" type="button" data-entry-close>닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 영상 모달 ══════════ -->
+<!-- 유튜브 ID 는 임시 ID. 확정 영상 업로드 후 data-video-id 만 교체한다 -->
+<div class="modal" id="modal-video" hidden data-video-id="Wz2qg3zJCtM"
+     role="dialog" aria-modal="true" aria-label="프롤로그 영상">
+  <div class="modal__box">
+    <div class="modal__video"></div>
+  </div>
+  <button class="modal__close" type="button" data-video-close aria-label="영상 닫기">&times;</button>
+</div>
+
+<!-- ══════════ 모바일 하단 고정 CTA ══════════ -->
+<div class="mobile-cta" data-shell="mobile-cta"><a class="btn btn--primary btn--block" href="#sec-pre">지금 사전예약하기</a></div>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var LABEL = { slayer: '슬레이어', vampire: '뱀파이어' };
+
+  /* ---------- 진영 선택 ---------- */
+  function paintFaction(f){
+    if (f) root.setAttribute('data-faction', f); else root.removeAttribute('data-faction');
+    document.querySelectorAll('.gate__opt').forEach(function(b){
+      b.setAttribute('aria-pressed', String(b.dataset.f === f));
+    });
+    document.querySelectorAll('[data-mine-label]').forEach(function(el){
+      el.textContent = f ? LABEL[f] : '선택 안 함';
+    });
+    /* 클래스 섹션은 파샬(M06) 스크립트가 소유한다 — 탭 버튼을 눌러 그쪽 핸들러를 태운다 */
+    if (f) { var tab = document.querySelector('.cls__tabs button[data-f="' + f + '"]'); if (tab) tab.click(); }
+  }
+  document.querySelectorAll('.gate__opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var f = btn.dataset.f;
+      if (root.getAttribute('data-faction') === f) f = null;   /* 같은 버튼을 한 번 더 누르면 해제 */
+      try { f ? localStorage.setItem('de_faction', f) : localStorage.removeItem('de_faction'); } catch(e){}
+      paintFaction(f);
+    });
+  });
+
+  var jump = document.querySelector('[data-mine-jump]');
+  if (jump) jump.addEventListener('click', function(){
+    var g = document.querySelector('.gate');
+    if (g) g.scrollIntoView({ block: 'center' });
+  });
+
+  /* ---------- 초기 상태 ---------- */
+  var init = root.getAttribute('data-faction');
+  paintFaction(init === 'slayer' || init === 'vampire' ? init : null);
+})();
+</script>
+<script>
+/* GNB 활성 메뉴: 화면 상단 띠에 걸린 섹션의 링크만 aria-current="true" → 700
+   (launch.html v1.0 과 동일 블록) */
+(function(){
+  var links = [].slice.call(document.querySelectorAll('.site-header nav a[href^="#"]'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  var linkOf = {}, targets = [];
+  links.forEach(function(a){
+    var el = document.querySelector(a.getAttribute('href'));
+    if (el) { linkOf[el.id] = a; targets.push(el); }
+  });
+  /* 교차 '비율'로 고르면 긴 섹션이 짧은 섹션에 밀린다 — 상단 띠 방식은 높이에 무관하다 */
+  var hit = {};
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ hit[e.target.id] = e.isIntersecting; });
+    var best = null;
+    targets.forEach(function(el){ if (hit[el.id]) best = el.id; });
+    links.forEach(function(a){ a.removeAttribute('aria-current'); });
+    if (best) linkOf[best].setAttribute('aria-current', 'true');
+  }, { threshold: 0, rootMargin: '-12% 0px -82% 0px' });
+  targets.forEach(function(el){ io.observe(el); });
+})();
+</script>
+<script>
+/* 영상 모달 — iframe 을 열 때 넣고 닫을 때 지운다.
+   초기 로드 시 넣어두면 백그라운드에서 유튜브가 계속 로드되고, 닫아도 소리가 남는다. */
+(function(){
+  var modal = document.getElementById('modal-video');
+  if (!modal) return;
+  var box = modal.querySelector('.modal__video');
+  var opener = null;
+
+  function open(btn){
+    /* 아티팩트 변환본(claude.ai)은 CSP 가 외부 iframe 을 막아 빈 칸이 뜬다 → 새 창으로 우회.
+       #page-root[data-artifact] 는 변환 단계(_artifact/_convert.py)에서만 주입된다.
+       로컬·실서비스는 아래 iframe 경로를 그대로 탄다. */
+    if (document.querySelector('#page-root[data-artifact]')) {
+      window.open('https://www.youtube.com/watch?v=' + modal.dataset.videoId, '_blank', 'noopener');
+      return;
+    }
+    opener = btn || null;
+    box.innerHTML = '<iframe src="https://www.youtube.com/embed/' + modal.dataset.videoId +
+      '?autoplay=1&rel=0" title="프롤로그 영상" allow="autoplay; fullscreen" allowfullscreen></iframe>';
+    modal.hidden = false;
+    document.body.classList.add('is-modal-open');
+    modal.querySelector('[data-video-close]').focus();
+  }
+  function close(){
+    modal.hidden = true;
+    box.innerHTML = '';                       /* ← 재생 정지 */
+    document.body.classList.remove('is-modal-open');
+    if (opener) { opener.focus(); opener = null; }
+  }
+
+  document.querySelectorAll('[data-video-open]').forEach(function(b){
+    b.addEventListener('click', function(){ open(b); });
+  });
+  modal.querySelector('[data-video-close]').addEventListener('click', close);
+  modal.addEventListener('click', function(e){ if (e.target === modal) close(); });   /* 오버레이 */
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) close(); });
+})();
+</script>
+<script>
+/* 응모 안내 모달 — 실제 응모는 커뮤니티 게시글에서 진행하므로 폼·카운트 로직이 없다 */
+(function(){
+  var modal = document.getElementById('modal-entry');
+  if (!modal) return;
+  var opener = null;
+  function close(){
+    modal.hidden = true;
+    document.body.classList.remove('is-modal-open');
+    if (opener) { opener.focus(); opener = null; }
+  }
+  document.querySelectorAll('[data-entry-open]').forEach(function(b){
+    b.addEventListener('click', function(){
+      opener = b; modal.hidden = false;
+      document.body.classList.add('is-modal-open');
+      modal.querySelector('[data-entry-close]').focus();
+    });
+  });
+  modal.querySelector('[data-entry-close]').addEventListener('click', close);
+  modal.addEventListener('click', function(e){ if (e.target === modal) close(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) close(); });
+})();
+</script>
+</body>
+</html>

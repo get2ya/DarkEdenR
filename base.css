@@ -1,0 +1,228 @@
+/* ============================================================
+   다크에덴R 캠페인 웹 시안 — 공통 디자인 토큰 (A안 「소실점의 금빛」)
+   출처: 40_최종/04_디자인컨셉.md · 50_2차방향/00_PD_재정렬.md
+   규칙: 레드와 블루는 절대 맞닿지 않는다(중성 어둠 + 금빛 소실점).
+         텍스트는 이미지에 굽지 않는다. 폰트는 Pretendard 1종.
+   ============================================================ */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+:root {
+  /* 주조 */
+  --ink: #07070B;        /* 잉크블랙 (body) */
+  --char: #12141A;       /* 딥차콜 (surface) */
+  --steel: #1E212B;      /* 스틸 (line-strong) */
+  --line: #2B2E36;       /* 라인 */
+  /* 종족 */
+  --vam: #B01220;  --vam-deep: #5E0810;  --vam-glow: #FF3A46;
+  --sla: #1E5BE6;  --sla-deep: #081A33;  --sla-glow: #74D2FF;
+  /* 제3색 금빛 — 광원으로만, 면 금지 */
+  --gold: #E0A93B;  --gold-hi: #FFE4A8;  --gold-deep: #7A5417;
+  /* 핏빛 텍스트 토큰 — '핏빛' 두 글자 한정, 로고 락업 안에서는 사용 금지 */
+  --ember: #FF3A46;
+  /* 중립 */
+  --body: #D8D4CB;  --mute: #8E8B84;  --dim: #5E5C57;  --white: #FFFFFF; /* 순백: 로고·하이라이트 + h2~h4 제목·버튼 라벨까지 (PD 확정 2026-09-17). badge·ratio·channel-card 는 --body 로 — CSS 값 교체는 M10 다음 라운드 */
+  /* 진영 강조색 (data-faction으로 교체되는 유일한 값) */
+  --accent: var(--gold);  --accent-glow: var(--gold-hi);
+  /* 타이포 */
+  --font: "Pretendard Variable", Pretendard, "Noto Sans KR", "Malgun Gothic", sans-serif;
+  /* 반응형 기준 (에셋요청서 §2): 모바일 1rem = 10px, PC(1439~) 1rem = 13.6px */
+  --r: 10px;
+  --header-h: 6rem;
+}
+@media (min-width: 1439px) { :root { --r: 13.6px; } }
+@media (min-width: 1741px) { :root { --r: clamp(13.6px, 0.78125vw, 20px); } }
+
+html[data-faction="slayer"]  { --accent: var(--sla); --accent-glow: var(--sla-glow); }
+html[data-faction="vampire"] { --accent: var(--vam); --accent-glow: var(--vam-glow); }
+
+html { font-size: var(--r); color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--ink); color: var(--body);
+  font-family: var(--font); font-size: 1.5rem; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+img, video { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+/* ---------- 타이포 스케일 ---------- */
+.t-eyebrow { font-size: 1.2rem; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); font-weight: 600; }
+.t-head    { font-size: 3.6rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.15; color: var(--white); text-wrap: balance; }
+.t-head--xl{ font-size: 4.8rem; }
+.t-sub     { font-size: 1.7rem; font-weight: 500; color: var(--body); letter-spacing: -.01em; }
+.t-body    { font-size: 1.5rem; color: var(--body); }
+.t-mute    { color: var(--mute); }
+.t-num     { font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.ember     { color: var(--ember); }               /* '핏빛' 두 글자 전용 */
+@media (min-width: 767px) {
+  .t-head { font-size: 4.4rem; } .t-head--xl { font-size: 6rem; } .t-sub { font-size: 1.9rem; }
+}
+
+/* ---------- 섹션 스캐폴드 (01_사이트맵 §3.1 계약) ---------- */
+.sec { position: relative; padding-block: 8rem; overflow: hidden; }
+.sec__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.sec__bg video, .sec__bg picture, .sec__bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sec__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,7,11,.55), rgba(7,7,11,.75)); }
+.sec__inner { position: relative; z-index: 1; width: min(100% - 4rem, 120rem); margin-inline: auto; }
+.sec__head { margin-bottom: 3.2rem; }
+.sec__head h2 { font-size: 3rem; font-weight: 800; letter-spacing: -.02em; color: var(--white); margin: 0 0 .8rem; text-wrap: balance; }
+.sec__head .t-eyebrow { margin-bottom: 1rem; display: block; }
+.sec--tight { padding-block: 5rem; }
+
+/* 금빛 세선 (매니페스토·구분선) */
+.rule-gold { height: 1px; background: linear-gradient(90deg, transparent, var(--gold-deep), var(--gold), var(--gold-deep), transparent); opacity: .8; }
+
+/* ---------- 버튼 ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .8rem; min-height: 5.2rem; padding: 0 2.6rem;
+  border-radius: .4rem; font-weight: 700; font-size: 1.6rem; letter-spacing: -.01em; border: 1px solid transparent; transition: filter .15s; }
+.btn:hover { filter: brightness(1.12); }
+.btn:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; }
+.btn--primary { background: var(--accent); color: var(--white); box-shadow: 0 0 24px -6px var(--accent-glow); }
+.btn--ghost   { background: rgba(255,255,255,.04); border-color: var(--line); color: var(--body); }
+.btn--gold    { background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: var(--ink); }
+.btn--sla     { background: var(--sla); color: var(--white); }
+.btn--vam     { background: var(--vam); color: var(--white); }
+.btn--block   { width: 100%; }
+
+/* ---------- 카드 ---------- */
+.card { background: var(--char); border: 1px solid var(--line); border-radius: .6rem; padding: 2.4rem; }
+.card--accent { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent); }
+.badge { display: inline-block; font-size: 1.1rem; font-weight: 700; letter-spacing: .08em; padding: .3rem .8rem; border-radius: .3rem; border: 1px solid var(--line); color: var(--mute); }
+.badge--gold { border-color: var(--gold-deep); color: var(--gold-hi); }
+/* 바탕이 --accent 라 테마에 따라 글자색도 바꾼다 (`.btn--primary` 와 같은 패턴).
+   기본 금빛 위 --ink 9.49:1 (--body 는 1.43:1 로 미달) / 진영색 위 순백 slayer 5.68 · vampire 7.11 */
+.badge--accent { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+html[data-faction] .badge--accent { color: var(--white); }
+
+/* ---------- 공통 셸 ---------- */
+.site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: var(--header-h); display: flex; align-items: center;
+  padding-inline: 2rem; background: linear-gradient(180deg, rgba(7,7,11,.85), rgba(7,7,11,0)); }
+.site-header__logo img { height: 3.2rem; width: auto; }
+.site-header__cta { margin-left: auto; }
+.site-header nav { display: none; gap: 2.4rem; margin-left: 4rem; font-size: 1.4rem; color: var(--body); }
+@media (min-width: 1439px) { .site-header nav { display: flex; } .site-header { padding-inline: 4rem; } .site-header__logo img { height: 4rem; } }
+.mobile-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; padding: 1.2rem 1.6rem calc(1.2rem + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(7,7,11,0), rgba(7,7,11,.92) 40%); }
+@media (min-width: 767px) { .mobile-cta { display: none; } }
+.site-footer { padding: 4rem 2rem 10rem; background: #050508; border-top: 1px solid var(--line); font-size: 1.2rem; color: var(--mute); line-height: 1.7; }
+.site-footer a { color: var(--body); margin-right: 1.4rem; }
+.site-footer p { margin: .4rem 0; }
+.rating-mark { display: inline-block; border: 1px solid var(--line); padding: .2rem .6rem; border-radius: .3rem; color: var(--body); font-weight: 700; }
+
+/* ---------- KV(main) 공통 ---------- */
+.kv { min-height: 100svh; display: grid; align-items: end; padding-block: calc(var(--header-h) + 2rem) 12rem; }
+.kv .sec__bg::after { background: linear-gradient(180deg, rgba(7,7,11,.15) 0%, rgba(7,7,11,.05) 40%, rgba(7,7,11,.78) 82%, var(--ink) 100%); }
+.kv__logo { width: min(64%, 42rem); margin-inline: auto; }
+.kv__logo img { width: 100%; }
+.kv__copy { text-align: center; margin-top: 2.4rem; }
+.kv__date { font-size: 1.4rem; letter-spacing: .18em; color: var(--gold-hi); margin-top: 1.6rem; }
+.kv__cta { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2.4rem; }
+.kv__legal { font-size: 1.1rem; color: var(--mute); text-align: center; margin-top: 1.6rem; }
+/* 소실점 금빛 광원 (한 화면에 하나) */
+.vanish { position: absolute; left: 50%; top: 52%; width: 40rem; height: 40rem; transform: translate(-50%,-50%); pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, rgba(255,228,168,.55) 0%, rgba(224,169,59,.28) 22%, rgba(224,169,59,0) 60%); mix-blend-mode: screen; }
+
+/* ---------- 진영 대비 요소 (레드·블루는 사이에 중성 영역을 둔다) ---------- */
+.ratio { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1.2rem; }
+.ratio__bar { position: relative; height: 1.4rem; background: var(--steel); border-radius: .7rem; overflow: hidden; grid-column: 1 / -1; }
+.ratio__bar i { position: absolute; top: 0; bottom: 0; }
+.ratio__bar .sla { left: 0; background: linear-gradient(90deg, var(--sla), var(--sla-deep)); }
+.ratio__bar .vam { right: 0; background: linear-gradient(270deg, var(--vam), var(--vam-deep)); }
+.ratio__bar .gap { left: 50%; width: 12%; transform: translateX(-50%); background: var(--ink); }
+.ratio__bar .gap::after { content: ""; position: absolute; left: 50%; top: 50%; width: .8rem; height: .8rem; border-radius: 50%; transform: translate(-50%,-50%); background: var(--gold-hi); box-shadow: 0 0 1rem .3rem rgba(224,169,59,.6); }
+.ratio__num { font-size: 3.2rem; font-weight: 800; letter-spacing: -.02em; color: var(--body); }
+.ratio__num--sla { color: var(--sla-glow); } .ratio__num--vam { color: var(--vam-glow); text-align: right; }
+
+/* ---------- 그리드 유틸 ---------- */
+.grid { display: grid; gap: 1.6rem; }
+.grid--2 { grid-template-columns: 1fr; } .grid--3 { grid-template-columns: 1fr; } .grid--4 { grid-template-columns: 1fr 1fr; }
+@media (min-width: 767px)  { .grid--2 { grid-template-columns: 1fr 1fr; } .grid--3 { grid-template-columns: repeat(3,1fr); } .grid--4 { grid-template-columns: repeat(4,1fr); } }
+.stack { display: grid; gap: 1.2rem; }
+.center { text-align: center; }
+
+/* 시안 전용: 개발 미착수 요소 표시 (스크린샷 시 숨김 가능) */
+.spec-note { position: absolute; top: .8rem; right: .8rem; z-index: 5; font-size: 1rem; letter-spacing: .08em; color: var(--gold-hi); border: 1px dashed var(--gold-deep); padding: .2rem .6rem; border-radius: .3rem; background: rgba(7,7,11,.7); }
+html[data-shot="clean"] .spec-note { display: none; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
+
+/* ============================================================
+   [추가 / M09 티저 시안] 공유 컴포넌트 — 기존 변수·클래스명 변경 없음, 규칙만 추가.
+   사전예약(M10)·론칭(M06)에서도 그대로 재사용한다.
+   ============================================================ */
+
+/* ---------- 국소 딤: 밝은 배경 위에서 오브젝트·텍스트 가독 확보 ---------- */
+.local-dim { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); pointer-events: none; z-index: 0;
+  width: 120rem; height: 64rem; max-width: 160%;
+  background: radial-gradient(ellipse at center, rgba(7,7,11,.88) 0%, rgba(7,7,11,.62) 38%, rgba(7,7,11,0) 72%); }
+
+/* ---------- 스크롤 큐 ---------- */
+.scroll-cue { position: absolute; left: 50%; bottom: 2.4rem; transform: translateX(-50%); z-index: 2;
+  display: grid; justify-items: center; gap: .8rem; font-size: 1.1rem; letter-spacing: .14em; color: var(--mute); }
+.scroll-cue i { display: block; width: 1px; height: 4rem; background: linear-gradient(180deg, transparent, var(--gold)); animation: cue 2.4s ease-in-out infinite; }
+@keyframes cue { 0%,100% { opacity: .35; transform: scaleY(.6); transform-origin: top; } 50% { opacity: 1; transform: scaleY(1); } }
+
+/* ---------- 규칙 매니페스토 ---------- */
+.manifesto { max-width: 68rem; margin-inline: auto; }
+.manifesto__row { display: flex; align-items: baseline; gap: 1.6rem; padding-block: 1.6rem; border-bottom: 1px solid var(--line); }
+.manifesto__row:last-of-type { border-bottom: 0; }
+.manifesto__no { flex: none; font-size: 1.3rem; font-weight: 700; letter-spacing: .12em; color: var(--gold); min-width: 7rem; }
+.manifesto__blank { display: flex; gap: .5rem; }
+.manifesto__blank b { display: block; width: 2.4rem; height: 2.4rem; background: var(--steel); border: 1px solid var(--line); border-radius: .2rem; }
+@media (min-width: 767px) { .manifesto__blank b { width: 3rem; height: 3rem; } .manifesto__no { min-width: 9rem; font-size: 1.5rem; } }
+
+/* ---------- 미디어 카드 ---------- */
+.media-card { display: block; width: 100%; text-align: left; background: var(--char); border: 1px solid var(--line); border-radius: .6rem; overflow: hidden; padding: 0; }
+.media-card__thumb { position: relative; aspect-ratio: 16/9; overflow: hidden; }
+.media-card__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.media-card__thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,7,11,.1), rgba(7,7,11,.6)); }
+.media-card__play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 2;
+  width: 6.4rem; height: 6.4rem; border-radius: 50%; border: 1px solid var(--gold-deep); background: rgba(7,7,11,.62);
+  display: grid; place-items: center; box-shadow: 0 0 3rem -.6rem var(--gold); }
+.media-card__play::before { content: ""; border-style: solid; border-width: 1.1rem 0 1.1rem 1.8rem; border-color: transparent transparent transparent var(--gold-hi); margin-left: .4rem; }
+.media-card__dur { position: absolute; right: 1rem; bottom: 1rem; z-index: 2; font-size: 1.1rem; font-weight: 700; letter-spacing: .06em;
+  padding: .3rem .7rem; border-radius: .3rem; background: rgba(7,7,11,.78); color: var(--body); }
+.media-card__body { padding: 2rem 2.4rem 2.4rem; }
+.media-card:hover .media-card__play { filter: brightness(1.15); }
+
+/* ---------- 진영 2분할: 레드와 블루는 맞닿지 않는다(사이에 중성 여백) ---------- */
+.faction-split { display: grid; grid-template-columns: 1fr; gap: 2.4rem; }
+@media (min-width: 767px) { .faction-split { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+.faction-panel { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: .6rem; padding: 3.2rem 2.4rem; min-height: 30rem;
+  display: grid; align-content: end; gap: .8rem; background: var(--char); }
+.faction-panel::before { content: ""; position: absolute; inset: 0; z-index: 0; }
+.faction-panel--sla::before { background: radial-gradient(ellipse at 50% 120%, rgba(30,91,230,.30), transparent 62%); }
+.faction-panel--vam::before { background: radial-gradient(ellipse at 50% 120%, rgba(176,18,32,.30), transparent 62%); }
+.faction-panel > * { position: relative; z-index: 1; }
+.faction-panel__fig { position: absolute; right: 1.6rem; top: 1.6rem; bottom: 1.6rem; z-index: 0; width: 46%; display: grid; place-items: center; }
+.faction-panel__fig img { max-height: 100%; width: auto; object-fit: contain; }
+.silhouette { filter: brightness(0) opacity(.92); }
+.faction-panel--sla .silhouette { filter: brightness(0) opacity(.92) drop-shadow(0 0 1.4rem rgba(116,210,255,.55)); }
+.faction-panel--vam .silhouette { filter: brightness(0) opacity(.92) drop-shadow(0 0 1.4rem rgba(255,58,70,.55)); }
+
+/* ---------- 채널 카드 ---------- */
+.channel-card { display: grid; gap: .6rem; align-content: start; background: var(--char); border: 1px solid var(--line); border-radius: .6rem; padding: 2.4rem; transition: border-color .15s; }
+.channel-card:hover { border-color: var(--gold-deep); }
+.channel-card__icon { width: 4.4rem; height: 4.4rem; border-radius: .6rem; display: grid; place-items: center; font-weight: 800; font-size: 1.6rem; color: var(--ink); margin-bottom: .8rem; }
+.channel-card__name { font-size: 1.8rem; font-weight: 700; color: var(--body); }
+
+/* ---------- 모달 ---------- */
+.modal[hidden] { display: none !important; }
+.modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 2rem; background: rgba(3,3,5,.86); }
+.modal__box { width: min(100%, 88rem); background: var(--char); border: 1px solid var(--line); border-radius: .6rem; overflow: hidden; }
+.modal__close { position: absolute; right: 1.6rem; top: 1.6rem; width: 4.4rem; height: 4.4rem; border-radius: .4rem; border: 1px solid var(--line); background: rgba(7,7,11,.8); color: var(--body); font-size: 2rem; line-height: 1; }
+
+/* ============================================================
+   [추가 / M10] 한국어 아이브로우 보정 — 기존 `.t-eyebrow` 규칙은 건드리지 않는다.
+   `.t-eyebrow` 는 영문 라벨 전제로 letter-spacing .14em + uppercase 를 쓴다.
+   카피북 v2.2 가 영문 라벨 병기를 폐지해 한국어 단독이 되면서 자간이 과해졌다.
+
+   ⚠️ 동작 주의 (M09 지적, 실측 확인) — 시안 3종의 문서 루트가 전부 `<html lang="ko">` 다.
+      `:lang(ko)` 는 상속된 언어를 보므로 **모든 `.t-eyebrow` 가 이미 매칭된다.**
+      즉 `ko` 클래스는 스위치가 아니라 **의도 표식**이다. 클래스를 빼도 이 규칙은 걸린다.
+   → 영문 라벨을 살리려면 클래스를 빼는 게 아니라 그 요소에 `lang="en"` 을 직접 준다.
+      예: <span class="t-eyebrow" lang="en">MEDIA</span>
+   (현재 시안 3종 아이브로우 19개는 전부 한국어라 영문 예외는 0건이다.)
+   ============================================================ */
+.t-eyebrow:lang(ko), .t-eyebrow.ko { letter-spacing: .06em; text-transform: none; }
