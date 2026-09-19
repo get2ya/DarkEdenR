@@ -245,6 +245,49 @@ html[data-faction] .btn--primary { color: var(--white); }
 .kv__cta--pick .btn { width: 100%; }
 .kv__pickgap { display: none; }
 
+/* ── 히어로 종족 2버튼 — 윤곽형(A3) ──────────────────────────────
+   04_디자인컨셉 §2.1: 종족색은 면이 아니라 코어(테두리·점)로만 쓴다. 순색 평면 알약은 §8.1 회피 4·5.
+   평소에는 발광이 없다 — 화면의 금빛 광원은 BI 드롭섀도 하나로 유지한다.
+   base.css 의 `.btn--sla/--vam`(면 + 순백 글자)을 히어로 안에서만 덮는다. */
+.kv__cta--pick .btn--sla,
+.kv__cta--pick .btn--vam {
+  background: rgba(7,7,11,.60);
+  backdrop-filter: blur(2px);
+  color: var(--body);
+  font-weight: 800;
+  box-shadow: none;
+  gap: 0;                       /* .btn 의 gap .8rem 을 끈다 — 점 간격은 ::before 의 margin 으로만 준다 */
+  transition: border-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.kv__cta--pick .btn--sla { border: 1px solid var(--sla); }
+.kv__cta--pick .btn--vam { border: 1px solid var(--vam); }
+/* 면이 아니라 테두리가 반응해야 하므로 base 의 밝기 필터는 끈다 */
+.kv__cta--pick .btn--sla:hover,
+.kv__cta--pick .btn--vam:hover { filter: none; }
+.kv__cta--pick .btn--sla:hover,
+.kv__cta--pick .btn--sla:focus-visible {
+  border-color: var(--sla-glow); color: var(--white);
+  box-shadow: 0 0 28px -8px rgba(116,210,255,.7), inset 0 0 22px -12px rgba(116,210,255,.7);
+}
+.kv__cta--pick .btn--vam:hover,
+.kv__cta--pick .btn--vam:focus-visible {
+  border-color: var(--vam-glow); color: var(--white);
+  box-shadow: 0 0 28px -8px rgba(255,58,70,.7), inset 0 0 22px -12px rgba(255,58,70,.7);
+}
+@media (prefers-reduced-motion: reduce) {
+  .kv__cta--pick .btn--sla,
+  .kv__cta--pick .btn--vam { transition: none; }
+}
+
+/* A3 점 — 이 블록을 지우면 A2 */
+.kv__cta--pick .btn--sla::before,
+.kv__cta--pick .btn--vam::before {
+  content: ""; flex: 0 0 auto; width: .7em; height: .7em; border-radius: 50%; margin-right: .7em;
+}
+.kv__cta--pick .btn--sla::before { background: var(--sla-glow); box-shadow: 0 0 10px 1px rgba(116,210,255,.8); }
+.kv__cta--pick .btn--vam::before { background: var(--vam-glow); box-shadow: 0 0 10px 1px rgba(255,58,70,.8); }
+/* A3 점 끝 */
+
 /* ── 히어로 세로 예산(v7) ──────────────────────────────────────────
    히어로 **안에서 세로 높이에 기여하는 rem 값만** --hr 로 바꾼다. --hr 는 base.css 가
    `min(1rem, (100svh - 헤더) / --hero-k)` 로 주므로, 세로가 넉넉하면 1rem 과 완전히 같고
@@ -257,7 +300,7 @@ html[data-faction] .btn--primary { color: var(--white); }
   .kv .kv__copy   { margin-top: calc(var(--hr) * 2.4); }
   .kv .kv__cta    { margin-top: calc(var(--hr) * 2.4); gap: calc(var(--hr) * 1); }
   .kv .kv__cta .btn { min-height: calc(var(--hr) * 5.2); font-size: calc(var(--hr) * 1.6); }
-  .kv .kv__cta--pick { gap: 0; }
+  .kv .kv__cta--pick { gap: 0; max-width: 54rem; }   /* A3 윤곽형 — 면이 사라져 72rem 은 과했다 */
   .kv .kv__pickgap::after { width: calc(var(--hr) * .8); height: calc(var(--hr) * .8); }
   .kv--video .kv__logo img { filter: drop-shadow(0 0 calc(var(--hr) * 3) rgba(255,228,168,.28)); }
 }
