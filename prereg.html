@@ -28,6 +28,10 @@
 @font-face { font-family: "NexonWarhaven"; src: url("assets/fonts/WarhavenR.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "NexonWarhaven"; src: url("assets/fonts/WarhavenB.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 :root { --font-display: "NexonWarhaven", "Pretendard Variable", Pretendard, sans-serif; }
+/* 히어로 세로 예산 — base.css 의 --hr 가 이 값으로 "히어로가 몇 rem 높이인가"를 판단한다.
+   1440×900(1rem=13.6px)에서 .kv 의 min-height 를 풀고 잰 자연 높이 830px,
+   (830 − 헤더 81.6) ÷ 13.6 = 55.03 → 올림 56. 상한 60 이하라 1440×900 에서는 --hr = 1rem 그대로다. */
+:root { --hero-k: 56; }
 
 /* GNB — 로고·우상단 CTA 제거. 메뉴만 남기고 서체를 워헤이븐으로.
    로고가 빠졌으므로 base.css 의 nav margin-left:4rem 을 0 으로 되돌린다 */
@@ -62,7 +66,10 @@ html[data-still] .kv--video .kv__still { display: block; }
 .kv--video .kv__logo { width: min(88%, 52rem); margin-inline: auto; }
 .kv--video .kv__logo img { filter: drop-shadow(0 0 3rem rgba(255,228,168,.28)); }
 @media (min-width: 767px)  { .kv--video .kv__logo { width: min(80%, 72rem); } }
-@media (min-width: 1439px) { .kv--video .kv__logo { width: min(56%, 76rem); } }
+/* 상한을 --hr 기준으로 — 세로가 모자란 화면(1366×650·2560×900)에서 BI 가 글자와 같은 비율로만 커진다.
+   58 인 이유: 1440×900 에서 56% = 776px, 57rem = 775.2px 라 57 로 두면 min() 이 뒤집혀 0.8px 좁아진다.
+   58rem = 788.8px 로 두면 1440×900 에서는 56% 가 그대로 이겨 기준 캡처와 픽셀이 같다. */
+@media (min-width: 1024px) { .kv--video .kv__logo { width: min(56%, calc(var(--hr) * 58)); } }
 
 /* 헤드라인 — 워헤이븐 700. 금빛 광원은 BI 드롭섀도 하나뿐이므로 본문색 단색, 글로우 없음.
    keep-all 이 없으면 390px 에서 「보이면 반드 / 시 죽인다!」로 단어 중간이 끊긴다 */
@@ -113,7 +120,7 @@ html[data-faction] .btn--primary { color: var(--white); }
 /* 두 단 — 상·하단을 맞춘다(stretch) */
 .pcard2__body { display: grid; gap: 2.4rem; align-items: stretch; }
 .pcard2__form { display: flex; flex-direction: column; justify-content: center; gap: 1.4rem; }
-@media (min-width: 1439px) {
+@media (min-width: 1024px) {
   .pcard2__body { grid-template-columns: auto 1fr; gap: 3.2rem; }
   /* ③ 은 버튼 줄이 보상 묶음(높이 160px)의 세로 중앙 — 묶음을 가로로 눕혀 높이를 줄였으므로
      start 로 두면 남는 높이가 전부 아래로 몰린다(실측 212px). */
@@ -127,7 +134,7 @@ html[data-faction] .btn--primary { color: var(--white); }
 /* 보상 이미지 영역 — 실서비스 전환 시 자리표시 2줄만 지우고 <img> 로 교체한다.
    표시 160px · 원본 512×512 투명 PNG (05 에셋 요청서 확정값). */
 .rwbox { display: grid; gap: 1.6rem; justify-content: center; align-content: start; }
-/* 1439+ 는 보상줄이 auto 트랙이라 content 폭 = 트랙 폭 → justify-content 가 무효. 그 아래 폭에서만 효과가 있다.
+/* 1024+ 는 보상줄이 auto 트랙이라 content 폭 = 트랙 폭 → justify-content 가 무효. 그 아래 폭에서만 효과가 있다.
    좌측 정렬이면 4칸 줄 오른끝이 아래 폼보다 1024에서 311px, 3번 박스는 759px 모자라 라인이 어긋났다. */
 .rwbox--4 { grid-template-columns: repeat(2, 160px); }
 .rwbox--1 { grid-template-columns: 160px; }
@@ -147,8 +154,8 @@ html[data-faction] .btn--primary { color: var(--white); }
 /* ③ 묶음은 767+ 에서 가로 — 박스 | (캡션 위 + 태그 아래). 묶음 높이가 박스 높이와 같아져
    버튼 줄과 세로 중앙을 맞출 때 남는 공백이 절반으로 준다. 모바일은 세로 그대로. */
 @media (min-width: 767px) {
-  /* justify-content 는 base 의 center 를 그대로 둔다 — 1439+ 는 auto 트랙이라 무효고,
-     1024 단일 단에서는 ②의 4칸과 같이 가운데로 와야 좌우 끝이 어긋나지 않는다. */
+  /* justify-content 는 base 의 center 를 그대로 둔다 — 1024+ 는 auto 트랙이라 무효고,
+     그 아래 단일 단에서는 ②의 4칸과 같이 가운데로 와야 좌우 끝이 어긋나지 않는다. */
   .rwbox--1 { grid-template-columns: 160px minmax(0, 20rem); grid-template-rows: auto auto;
     align-items: center; gap: 0 1.6rem; }
   .rwbox--1 .rwbox__i { display: contents; }
@@ -158,7 +165,7 @@ html[data-faction] .btn--primary { color: var(--white); }
   .rwbox--1 .rwbox__tag { grid-column: 2; grid-row: 2; align-self: start;
     width: auto; max-width: none; margin: 0; text-align: left; }
 }
-@media (min-width: 767px) and (max-width: 1438px) {
+@media (min-width: 767px) and (max-width: 1023px) {
   .rwbox--4 { grid-template-columns: repeat(4, 140px); }
   .rwbox--4 .rwbox__ph, .rwbox--4 .rwbox__i figcaption { width: 140px; max-width: 140px; }
   .rwbox--1 { grid-template-columns: 140px minmax(0, 20rem); }
@@ -237,6 +244,23 @@ html[data-faction] .btn--primary { color: var(--white); }
   width: 100%; max-width: 72rem; margin-inline: auto; }
 .kv__cta--pick .btn { width: 100%; }
 .kv__pickgap { display: none; }
+
+/* ── 히어로 세로 예산(v7) ──────────────────────────────────────────
+   히어로 **안에서 세로 높이에 기여하는 rem 값만** --hr 로 바꾼다. --hr 는 base.css 가
+   `min(1rem, (100svh - 헤더) / --hero-k)` 로 주므로, 세로가 넉넉하면 1rem 과 완전히 같고
+   모자랄 때만 작아진다. 1024 미만에서는 base 가 --hr 를 1rem 으로 두므로 이 블록을 열지 않아도
+   같지만, 아래 `max-width:766px` 블록보다 뒤에 있어 순서로 덮어쓰지 않도록 1024+ 로 닫아 둔다.
+   히어로 밖(사전예약·이벤트·세계관 …)은 건드리지 않는다. */
+@media (min-width: 1024px) {
+  .kv .t-head--xl { font-size: calc(var(--hr) * 6); }
+  .kv .kv__master { margin-top: calc(var(--hr) * .4); }
+  .kv .kv__copy   { margin-top: calc(var(--hr) * 2.4); }
+  .kv .kv__cta    { margin-top: calc(var(--hr) * 2.4); gap: calc(var(--hr) * 1); }
+  .kv .kv__cta .btn { min-height: calc(var(--hr) * 5.2); font-size: calc(var(--hr) * 1.6); }
+  .kv .kv__cta--pick { gap: 0; }
+  .kv .kv__pickgap::after { width: calc(var(--hr) * .8); height: calc(var(--hr) * .8); }
+  .kv--video .kv__logo img { filter: drop-shadow(0 0 calc(var(--hr) * 3) rgba(255,228,168,.28)); }
+}
 @media (min-width: 767px) {
   .kv__cta--pick { grid-template-columns: 1fr 12% 1fr; gap: 0; }
   .kv__pickgap { display: block; position: relative; align-self: stretch; }
@@ -533,6 +557,19 @@ html[data-ratio="pending"] .pick__pending { display: block; }
    연출이 0.8초인데 캡처는 250ms 뒤에 찍혀 중간 프레임(거의 투명)이 박히기 때문이다 */
 html[data-shot] .wblock__fig,
 html[data-shot] .wblock__txt > * { opacity: 1 !important; filter: none !important; transform: none !important; transition: none !important; }
+
+/* ── 고지 글자 하한(v7 2회차) ────────────────────────────────────
+   1024~1200 이 이제 PC 판인데 고지 성격 문구가 11~11.5px 로 떨어진다(1rem 이 10~11.3px).
+   Q54(c) "쉽게 인식" 기준으로 이 대역에서만 12px 을 바닥으로 깐다.
+   1440 에서는 1.1rem = 14.96px 라 max() 가 원래 값을 그대로 골라 캡처가 변하지 않는다.
+   ⚠ 이 블록은 세 규칙의 원래 선언보다 뒤에 있어야 순서에서 이긴다 — 스타일 블록 맨 끝에 둔 이유다.
+   ⚠ CSS 주석 안에도 닫는 style 태그 문자열을 쓰면 안 된다 — HTML 파서가 거기서 블록을 끊는다(실측으로 당함).
+   스니펫(kol·cm) 안 글자는 동결이라 제외한다. */
+@media (min-width: 1024px) {
+  .pick__note { font-size: max(1.1rem, 12px); }                  /* ① 미선택 고지 */
+  .pre-notice, .pre-notice a { font-size: max(1.15rem, 12px); }  /* 사전예약 유의사항 3줄 + 이벤트 하단 1줄 */
+  .pre-legal,  .pre-legal a  { font-size: max(1.1rem, 12px); }   /* 확률형 줄 */
+}
 </style>
 
 <!-- kol:style start · kol_slots.html md5 bfc3489f4e84 · 원본 그대로, 수정 금지 -->

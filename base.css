@@ -25,12 +25,23 @@
   --accent: var(--gold);  --accent-glow: var(--gold-hi);
   /* 타이포 */
   --font: "Pretendard Variable", Pretendard, "Noto Sans KR", "Malgun Gothic", sans-serif;
-  /* 반응형 기준 (에셋요청서 §2): 모바일 1rem = 10px, PC(1439~) 1rem = 13.6px */
+  /* 반응형 기준 (에셋요청서 §2 + 2026-09-19 반응형 보강): 모바일·태블릿(~1023) 1rem = 10px.
+     PC 판은 1024 부터. 1rem 은 1024→1440 에서 10→13.6px 로 끊김 없이 커지고(0.94445vw ≒ 13.6/1440, 1440 에서 정확히 13.6px 로 잘리도록 올림),
+     1440~1741 은 13.6px, 그 위는 0.78125vw(=15px@1920), 상한 20px@2560. 계단 점프 없음. */
   --r: 10px;
+  /* 히어로 전용 단위 — 기본은 1rem. PC 판에서만 세로가 모자랄 때 줄어든다(아래 @media).  */
+  --hr: 1rem;
   --header-h: 6rem;
 }
-@media (min-width: 1439px) { :root { --r: 13.6px; } }
-@media (min-width: 1741px) { :root { --r: clamp(13.6px, 0.78125vw, 20px); } }
+@media (min-width: 1024px) {
+  :root {
+    --r: clamp(10px, max(min(0.94445vw, 13.6px), 0.78125vw), 20px);
+    /* 첫 화면은 가로·세로를 둘 다 본다: 히어로 구성(헤더 제외)이 --hero-k rem 높이라고 할 때
+       화면 세로가 모자라면 그만큼만 히어로 안쪽 크기를 줄인다. 세로가 넉넉하면 정확히 1rem(변화 없음).
+       --hero-k 는 페이지가 :root 에 선언(1440×900·1rem=13.6px 에서 잰 (히어로 자연 높이 − 헤더) ÷ 13.6, 상한 60). */
+    --hr: max(0.65rem, min(1rem, calc((100svh - var(--header-h)) / var(--hero-k, 60))));   /* 하한 0.65rem — 그보다 낮은 창에서는 더 줄이지 않고 히어로가 스크롤된다(판독 하한, PD) */
+  }
+}
 
 html[data-faction="slayer"]  { --accent: var(--sla); --accent-glow: var(--sla-glow); }
 html[data-faction="vampire"] { --accent: var(--vam); --accent-glow: var(--vam-glow); }
@@ -101,7 +112,7 @@ html[data-faction] .badge--accent { color: var(--white); }
 .site-header__logo img { height: 3.2rem; width: auto; }
 .site-header__cta { margin-left: auto; }
 .site-header nav { display: none; gap: 2.4rem; margin-left: 4rem; font-size: 1.4rem; color: var(--body); }
-@media (min-width: 1439px) { .site-header nav { display: flex; } .site-header { padding-inline: 4rem; } .site-header__logo img { height: 4rem; } }
+@media (min-width: 1024px) { .site-header nav { display: flex; } .site-header { padding-inline: 4rem; } .site-header__logo img { height: 4rem; } }
 .mobile-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; padding: 1.2rem 1.6rem calc(1.2rem + env(safe-area-inset-bottom));
   background: linear-gradient(180deg, rgba(7,7,11,0), rgba(7,7,11,.92) 40%); }
 @media (min-width: 767px) { .mobile-cta { display: none; } }
@@ -111,7 +122,7 @@ html[data-faction] .badge--accent { color: var(--white); }
 .rating-mark { display: inline-block; border: 1px solid var(--line); padding: .2rem .6rem; border-radius: .3rem; color: var(--body); font-weight: 700; }
 
 /* ---------- KV(main) 공통 ---------- */
-.kv { min-height: 100svh; display: grid; align-items: end; padding-block: calc(var(--header-h) + 2rem) 12rem; }
+.kv { min-height: 100svh; display: grid; align-items: end; padding-block: calc(var(--header-h) + var(--hr) * 2) calc(var(--hr) * 12); }
 .kv .sec__bg::after { background: linear-gradient(180deg, rgba(7,7,11,.15) 0%, rgba(7,7,11,.05) 40%, rgba(7,7,11,.78) 82%, var(--ink) 100%); }
 .kv__logo { width: min(64%, 42rem); margin-inline: auto; }
 .kv__logo img { width: 100%; }
