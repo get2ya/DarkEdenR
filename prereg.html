@@ -108,15 +108,17 @@ html[data-faction] .btn--primary { color: var(--white); }
    세로 순차로 바꾸고 단계 라벨을 카드 헤더 행에 넣어 어긋날 자리를 없앤다. */
 .pre-flow { display: grid; gap: 2.4rem; margin-top: 4rem; }
 .pcard2 { padding: 3.2rem; }
-/* 헤더 행 높이 고정 — 두 카드의 헤더 라인이 같은 y 에 오게 (원형 숫자 + 라벨 + 완료 표시) */
-.pcard2__head { display: flex; align-items: center; gap: 0; min-height: 5.6rem; margin-bottom: 1.2rem; }
+/* 헤더 행 높이 고정 — 두 카드의 헤더 라인이 같은 y 에 오게 (원형 숫자 + 라벨 + 완료 표시).
+   제목은 섹션 h2·① 라벨과 같은 가운데 축에 둔다. */
+.pcard2__head { display: flex; align-items: center; justify-content: center; gap: 0; min-height: 5.6rem; margin-bottom: 1.2rem; position: relative; }
 .pcard2__t { font-family: var(--font-display); font-weight: 700; letter-spacing: 0; font-size: 1.9rem; color: var(--body); }
-.pcard2__head .stamp__done { margin-left: auto; }
+/* 완료 표시는 헤더 오른쪽 끝에 띄워 둔다 — 흐름에 있으면 표시가 뜰 때 제목이 가운데에서 밀린다 */
+.pcard2__head .stamp__done { position: absolute; right: 0; top: 50%; transform: translateY(-50%); margin-left: 0; }
 /* ③ 은 ② 에 종속된 카드 — 헤더 한 단계 작게, 테두리 한 단계 낮게(위계가 보이게) */
 .pcard2--sub { border-color: rgba(43,46,54,.55); }
 .pcard2--sub .pcard2__t { font-size: 1.6rem; }
-.pcard2__promise { margin: 0 0 2.4rem; font-size: 1.5rem; font-weight: 800; color: var(--gold-hi); word-break: keep-all; }
-.pcard2__p { margin: 0 0 2.4rem; font-size: 1.4rem; color: var(--mute); word-break: keep-all; }
+.pcard2__promise { margin: 0 0 2.4rem; font-size: 1.5rem; font-weight: 800; color: var(--gold-hi); word-break: keep-all; text-align: center; }
+.pcard2__p { margin: 0 0 2.4rem; font-size: 1.4rem; color: var(--mute); word-break: keep-all; text-align: center; }
 /* 두 단 — 상·하단을 맞춘다(stretch) */
 .pcard2__body { display: grid; gap: 2.4rem; align-items: stretch; }
 .pcard2__form { display: flex; flex-direction: column; justify-content: center; gap: 1.4rem; }
@@ -124,11 +126,17 @@ html[data-faction] .btn--primary { color: var(--white); }
   .pcard2__body { grid-template-columns: auto 1fr; gap: 3.2rem; }
   /* ③ 은 버튼 줄이 보상 묶음(높이 160px)의 세로 중앙 — 묶음을 가로로 눕혀 높이를 줄였으므로
      start 로 두면 남는 높이가 전부 아래로 몰린다(실측 212px). */
-  .pcard2__body--store { grid-template-columns: 1fr auto; align-items: center; }
+  .pcard2__body--store { grid-template-columns: minmax(0, 1fr) max-content; align-items: center; }
   /* v6 부터 폼이 더 긴 열이다(기기 세그먼트 + 동의 4항). 양 끝을 맞추던 보정은 폐기.
      남는 쪽인 보상 프레임 블록을 폼 열에 대해 세로 중앙에 둔다(검토 1회차 4번). */
   .pcard2__form { justify-content: flex-start; }
   .pcard2__body { align-items: center; }
+  /* W2 — 폼 열이 911px 까지 늘어나 「사전예약 완료하기」가 글자의 5.9배였다.
+     폼을 40rem 으로 묶고 [보상 2×2 | 폼] 쌍을 카드 가운데에 놓는다. 보상 프레임은 160px 그대로. */
+  #sec-pre-form .pcard2__body { grid-template-columns: auto minmax(0, 40rem); justify-content: center; column-gap: 7rem; }
+  /* ③ 본문도 ② 의 [보상|폼] 쌍과 같은 폭의 가운데 띠로 — 같은 축에 선 두 카드의 내용 폭을 맞춘다.
+     식은 ② 쌍 그대로: 보상 2칸(160px×2) + 칸 사이 1.6rem + 열 간격 7rem + 폼 40rem. */
+  .pcard2__body--store { max-width: calc(320px + 1.6rem + 7rem + 40rem); margin-inline: auto; }
 }
 
 /* 보상 이미지 영역 — 실서비스 전환 시 자리표시 2줄만 지우고 <img> 로 교체한다.
@@ -188,6 +196,14 @@ html[data-faction] .btn--primary { color: var(--white); }
 /* 스토어 택1 — 선택 상태는 체크 + 금빛 테두리 */
 .store-pick { display: grid; gap: 1rem; align-content: start; }
 @media (min-width: 767px) { .store-pick { grid-template-columns: repeat(3, 1fr); align-content: start; } }
+/* ⚠ 이 블록은 위 767 규칙보다 **뒤에** 있어야 한다 — 특이도가 같아 순서로 결정된다.
+   1024+ 에서 ③ 본문이 ② 와 같은 폭의 띠가 되면서 `1fr` 이 글자 길이대로 벌어져 버튼 폭이
+   173/191/147 로 제각각이 됐다. minmax(0,1fr) 로 같은 폭에 묶고, 가장 긴 「Google Play」가
+   그 폭에 1줄로 들어가도록 좌우 padding 을 2.6rem → 1.6rem 으로 줄인다. */
+@media (min-width: 1024px) {
+  .store-pick { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .store-pick .btn { padding-inline: 1.6rem; }
+}
 .store-pick .btn { white-space: nowrap; }
 .store-pick .btn[aria-pressed="true"] { border-color: var(--gold); color: var(--gold-hi); }
 .store-pick .btn[aria-pressed="true"]::before { content: "✓"; margin-right: .4rem; }
