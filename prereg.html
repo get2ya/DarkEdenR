@@ -652,7 +652,7 @@ html[data-shot] .gate__kol, html[data-shot] .gate__kol * { transition: none !imp
 </style>
 <!-- kol:style end -->
 
-<!-- cm:style start · consent_modal.html md5 38133a97539e · 원본 그대로, 수정 금지 -->
+<!-- cm:style start · consent_modal.html md5 2ee0339ffb27 · 원본 그대로, 수정 금지 -->
 <style>
 /* 스크롤 잠금 — 계약대로 html 에 건다.
    prereg 의 기존 모달들은 body 에 이 클래스를 붙이므로 body 도 함께 적어 둔다.
@@ -745,6 +745,7 @@ html[data-shot] .cm-seg__opt, html[data-shot] .cm-tab, html[data-shot] .cm-more 
 .cm-panel dt { font-weight: 700; color: var(--mute); white-space: nowrap; }
 .cm-panel dd { margin: 0; word-break: keep-all; }
 .cm-panel p { margin: 1.4rem 0 0; color: var(--mute); word-break: keep-all; }
+.cm-panel a { color: var(--body); text-decoration: underline; text-underline-offset: .3rem; }
 
 .cm-notice__foot { margin-top: 2.4rem; display: flex; justify-content: center; }
 .cm-notice__foot .btn { min-width: 160px; }
@@ -1223,7 +1224,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
     <p>개인정보 보호책임자 {{개인정보보호책임자}} | 고객센터 {{고객센터메일}}</p>
     <p>개인정보 처리위탁 — 문자 발송: {{수탁사}} (사전예약 안내 문자 발송 업무)</p>
     <p style="margin-top:1.2rem">
-      <a href="/terms">이용약관</a><a href="/privacy"><strong>개인정보처리방침</strong></a><a href="/probability">확률형 아이템 정보</a><a href="#">사전예약 유의사항</a><a href="#">이벤트 유의사항</a>
+      <a href="http://cb-op.playworks.co.kr:9191/ServiceCenter/Rules" target="_blank" rel="noopener noreferrer">이용약관</a><a href="http://cb-op.playworks.co.kr:9191/ServiceCenter/Privacy" target="_blank" rel="noopener noreferrer"><strong>개인정보처리방침</strong></a><a href="/probability">확률형 아이템 정보</a><a href="#">사전예약 유의사항</a><a href="#">이벤트 유의사항</a>
     </p>
     <p style="margin-top:1.2rem">본 게임에는 확률형 아이템이 포함되어 있습니다.</p>
     <p class="t-mute">등급 표기는 등급분류 완료 후 표시합니다. (사전예약 단계 미표기)</p>
@@ -1254,7 +1255,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
   <button class="modal__close" type="button" data-video-close aria-label="영상 닫기">&times;</button>
 </div>
 
-<!-- cm:markup start · consent_modal.html md5 38133a97539e · 원본 그대로, 수정 금지 -->
+<!-- cm:markup start · consent_modal.html md5 2ee0339ffb27 · 원본 그대로, 수정 금지 -->
 <template id="cm-tpl-device">
   <div class="cm-block">
     <span class="cm-block__label" id="cm-device-label">사용 기기</span>
@@ -1299,7 +1300,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 </template>
 <!-- cm:markup end -->
 
-<!-- cm:markup-2 start · consent_modal.html md5 38133a97539e · 원본 그대로, 수정 금지 -->
+<!-- cm:markup-2 start · consent_modal.html md5 2ee0339ffb27 · 원본 그대로, 수정 금지 -->
 <div class="modal cm-modal" id="cm-notice" hidden role="dialog" aria-modal="true" aria-labelledby="cm-notice-title">
   <div class="modal__box cm-notice">
     <h3 class="cm-notice__title" id="cm-notice-title">사전예약 유의사항</h3>
@@ -1328,6 +1329,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
           <dt>보유 기간</dt><dd>보상 지급 완료 시까지, 이후 지체 없이 파기</dd>
         </dl>
         <p>동의를 거부하실 수 있으며, 거부 시 사전예약에 참여하실 수 없습니다.</p>
+        <p><a href="http://cb-op.playworks.co.kr:9191/ServiceCenter/Privacy" target="_blank" rel="noopener noreferrer">개인정보 처리방침 전문 보기</a></p>
       </div>
       <div class="cm-panel" role="tabpanel" id="cm-panel-2" aria-labelledby="cm-tab-2" tabindex="0" hidden>
         <dl>
@@ -1621,7 +1623,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 </script>
 <!-- kol:script end -->
 
-<!-- cm:script start · consent_modal.html md5 38133a97539e · 원본 그대로, 수정 금지 -->
+<!-- cm:script start · consent_modal.html md5 2ee0339ffb27 · 원본 그대로, 수정 금지 -->
 <script>
 (function (global) {
   'use strict';
