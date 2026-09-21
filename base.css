@@ -237,3 +237,44 @@ html[data-shot="clean"] .spec-note { display: none; }
    (현재 시안 3종 아이브로우 19개는 전부 한국어라 영문 예외는 0건이다.)
    ============================================================ */
 .t-eyebrow:lang(ko), .t-eyebrow.ko { letter-spacing: .06em; text-transform: none; }
+
+/* ---------- 고정 크롬 (2026-09-21) — 동작은 _snippets/chrome.js ----------
+   (1) 헤더: 스크롤하면 어두운 배경이 깔려 GNB 글자가 본문과 겹쳐 읽히지 않게 한다. 맨 위(스크롤 0)는 그대로.
+   (2) 위치 레일: 화면 오른쪽 여백의 가는 세로선 + 마름모. 항목은 GNB 와 같다(chrome.js 가 GNB 를 읽어 만든다).
+       금색은 표식으로만 쓴다 — 글로우·후광 없음(금빛 광원은 화면에 하나, 04 §2.2).
+   (3) 모바일 하단 CTA: .is-covered 면 화면 아래로 내려가 숨는다. */
+@media (min-width: 1024px) {
+  .site-header::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0;
+    background: rgba(7,7,11,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line); transition: opacity .2s ease; }
+  .site-header.is-scrolled::before { opacity: 1; }
+}
+.prail { display: none; }
+@media (min-width: 1024px) {
+  .prail { display: block; position: fixed; z-index: 45; top: 50%; right: calc(1rem - 12px); width: 24px; transform: translateY(-50%); }
+  .prail ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; position: relative; }
+  .prail ol::before { content: ""; position: absolute; left: 50%; top: 12px; bottom: 12px; width: 1px; margin-left: -.5px; background: var(--line); }
+  .prail__fill { position: absolute; left: 50%; top: 12px; width: 1px; height: 0; margin-left: -.5px; background: var(--gold-deep); z-index: 1; }
+  .prail a { position: relative; z-index: 2; display: grid; place-items: center; width: 24px; height: 24px; }
+  .prail i { display: block; width: 7px; height: 7px; transform: rotate(45deg); background: var(--ink); border: 1px solid var(--mute);
+    transition: width .2s ease, height .2s ease, background-color .2s ease, border-color .2s ease; }
+  .prail a.is-passed i { background: var(--gold-deep); border-color: var(--gold-deep); }
+  .prail a[aria-current="true"] i { width: 9px; height: 9px; background: var(--gold-hi); border-color: var(--gold-hi); }
+  .prail a:hover i { border-color: var(--gold); }
+  .prail b { position: absolute; right: 100%; top: 50%; margin-right: 6px; padding: .5em .9em; white-space: nowrap;
+    font-family: var(--font-display, var(--font)); font-weight: 400; font-size: max(1.2rem, 12px); letter-spacing: .06em; line-height: 1;
+    color: var(--body); background: rgba(7,7,11,.86); border: 1px solid var(--line); border-radius: 3px;
+    opacity: 0; transform: translate(6px, -50%); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+  .prail a[aria-current="true"] b { color: var(--gold-hi); border-color: var(--gold-deep); }
+  /* 이름표가 보이는 때: 섹션이 바뀐 직후 1.5초(.is-flash) · 레일에 마우스를 올렸을 때(전체) · 키보드 포커스 */
+  .prail a.is-flash b, .prail:hover b, .prail:focus-within b { opacity: 1; transform: translate(0, -50%); }
+  .prail:hover b, .prail:focus-within b { pointer-events: auto; }
+  .prail a:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; border-radius: 2px; }
+}
+html[data-shot] .prail, html.is-modal-open .prail, body.is-modal-open .prail { display: none; }
+.mobile-cta { transition: transform .25s ease, opacity .25s ease, visibility 0s linear 0s; }
+/* 하단 고정 CTA 는 고정 크롬이라 글로우를 두지 않는다(금빛 광원은 화면에 하나, 04 §2.2 원칙 4·5) */
+.mobile-cta .btn { box-shadow: none; }
+.mobile-cta.is-covered { transform: translateY(110%); opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform .25s ease, opacity .25s ease, visibility 0s linear .25s; }
+@media (prefers-reduced-motion: reduce) { .site-header::before, .prail i, .prail b, .mobile-cta, .mobile-cta.is-covered { transition: none; } }
