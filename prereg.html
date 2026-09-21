@@ -425,6 +425,13 @@ html[data-ratio="pending"] .pick__pending { display: block; }
 .sec:not(.kv) .sec__head h2,
 .sec:not(.kv) .sec__head .t-sub { font-family: var(--font-display); letter-spacing: 0; }
 .sec:not(.kv) .sec__head h2 { font-weight: 700; }
+/* h2 를 어절 덩어리로 끊는다 — 그대로 두면 390 에서 「…참여하 / 는」처럼 단어 중간이 꺾인다 */
+.sec__head h2 .nb { white-space: nowrap; }
+/* 첫 덩어리 폭 = 글자 크기 × 11.1. 390(박스 350)은 30px 그대로 들어가지만 360(박스 320)은 13px 넘친다.
+   ≤766 에서 이 h2 만 폭에 맞춰 줄인다 — 390 이상 30px 유지, 360 ≈ 28.3px, 320 ≈ 24.8px. */
+@media (max-width: 766px) {
+  #sec-pre .sec__head h2 { font-size: min(3rem, calc((100vw - 4rem) / 11.3)); }
+}
 .sec:not(.kv) .sec__head .t-sub { font-weight: 400; font-size: 1.9rem; }
 @media (max-width: 766px) {
   /* 서브는 2줄 상한 — 넘치면 말줄임 대신 폭을 줄이도록 폰트만 내린다 */
@@ -825,7 +832,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
   <div class="sec__inner">
     <div class="sec__head center">
       <span class="t-eyebrow ko">사전예약</span>
-      <h2>휴대폰 인증만 하면 됩니다</h2>
+      <h2><span class="nb">크리에이터와 함께 참여하는</span> <span class="nb">다크에덴R 사전예약!</span></h2>
       <p class="t-sub t-mute">보상 4종은 휴대폰 사전예약을 완료하신 분께 출시 후 게임 내 우편으로 드립니다</p>
       <p class="step-label"><b class="step">1</b>종족 선택</p>
     </div>
