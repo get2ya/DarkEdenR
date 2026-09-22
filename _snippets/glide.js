@@ -6,11 +6,11 @@
    (그 순간 목표 위치를 실제 위치에 맞춰 튀지 않게 한다). 트랙패드는 이미 관성이 있어 휠 델타가 작고 잦다 — 같은 경로로 처리해도 자연스럽다.
    끄는 조건: <1024(PC 전용) · prefers-reduced-motion · html[data-shot](캡처) · 모달 열림(is-modal-open, 모달 안 스크롤을 막지 않기 위해)
    · 휠 이벤트 대상이 스크롤 가능한 안쪽 요소(모달 본문 등)일 때.
-   값: EASE = 프레임당 남은 거리의 12% 를 따라감(60fps 기준 약 0.35초에 95% 도달). 이동은 behavior:'instant'(CSS 스무스와 충돌 방지).
+   값: EASE = 프레임당 남은 거리의 20% 를 따라감(60fps 기준 약 0.22초에 95% 도달). 이동은 behavior:'instant'(CSS 스무스와 충돌 방지).
    사용: 페이지 끝에 <script src="_snippets/glide.js" defer></script> 한 줄(stack.js 뒤). 페이지별 설정 없음. */
 (function () {
   var doc = document, win = window, root = doc.documentElement;
-  var EASE = .12, MAX_STEP = 2400;   /* 휠 한 번에 누적할 수 있는 최대 거리(폭주 방지) */
+  var EASE = .20, MAX_STEP = 2400;   /* v13: .12 → .20 (휠 1회 약 40 → 22프레임, Justin "PC 가 느려진다") */   /* 휠 한 번에 누적할 수 있는 최대 거리(폭주 방지) */
   var MQ = '(min-width: 1024px)';
   if (win.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 

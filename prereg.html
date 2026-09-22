@@ -154,7 +154,6 @@ html[data-faction] .btn--primary { color: var(--white); }
 .pcard2__head { display: flex; align-items: center; justify-content: center; gap: 0; min-height: 5.6rem; margin-bottom: 1.2rem; position: relative; }
 .pcard2__t { font-family: var(--font-display); font-weight: 700; letter-spacing: 0; font-size: 1.9rem; color: var(--body); }
 /* 완료 표시는 헤더 오른쪽 끝에 띄워 둔다 — 흐름에 있으면 표시가 뜰 때 제목이 가운데에서 밀린다 */
-.pcard2__head .stamp__done { position: absolute; right: 0; top: 50%; transform: translateY(-50%); margin-left: 0; }
 /* ③ 은 ② 에 종속된 카드 — 헤더 한 단계 작게, 테두리 한 단계 낮게(위계가 보이게) */
 .pcard2--sub { border-color: rgba(43,46,54,.55); }
 .pcard2--sub .pcard2__t { font-size: 1.6rem; }
@@ -265,8 +264,9 @@ html[data-faction] .btn--primary { color: var(--white); }
   flex-direction: column; justify-content: center; align-items: center; line-height: 1.15; text-decoration: none; }
 .sbadge--hold b { font-size: 1.3rem; font-weight: 700; color: var(--body); }
 .sbadge--hold small { font-size: 1rem; color: var(--mute); }
-.stamp__done { margin-left: auto; font-size: 1.2rem; font-weight: 700; color: var(--gold-hi); }
-.stamp__done::before { content: "✓"; margin-right: .4rem; }
+/* v13 — 헤더 우상단 「✓ 인증 완료」 표시는 제거(Justin). 완료는 「사전예약 완료하기」 버튼 자체가 완료 상태로 바뀌어 보여 준다 */
+.btn--primary.is-done { background: var(--char); color: var(--gold-hi); border: 1px solid var(--gold-deep); box-shadow: none; cursor: default; }
+.btn--primary.is-done::before { content: "✓"; margin-right: .6rem; }
 .pcard2.is-done { border-color: var(--gold-deep); }
 
 /* 단계 라벨 — 명사형. 숫자는 기존 `.step` 재사용 */
@@ -945,7 +945,6 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
       <div class="card pcard2" id="sec-pre-form" data-stamp="phone">
         <div class="pcard2__head">
           <b class="step">2</b><b class="pcard2__t">휴대폰 사전예약</b>
-          <span class="stamp__done" hidden>인증 완료</span>
         </div>
         <p class="pcard2__promise">휴대폰 사전예약 완료 시 보상 4종 전원 지급!</p>
         <div class="pcard2__body">
@@ -1065,12 +1064,12 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 <section id="sec-world" class="sec sec--charcoal sec--band" data-slot="world">
   <div class="sec__inner">
     <div class="sec__head center">
-      <span class="t-eyebrow world__eyebrow" lang="en">DARK EDEN</span>
+      <span class="t-eyebrow world__eyebrow" lang="en">DARKEDEN</span>
       <h2>모든 것은 낙원에서 시작됐다</h2>
       <p class="world__sub">신이 빛을 거둔 그날부터, 에슬라니아의 밤은 끝나지 않았다</p>
     </div>
 
-    <div class="wblock" data-ember>
+    <div class="wblock">
       <figure class="wblock__fig" style="margin:0"><img src="assets/world_w01.jpg" alt="" width="1600" height="900"></figure>
       <div class="wblock__txt"><span class="wblock__no">01</span><h3>낙원과 금단의 열매</h3>
         <p>신은 에덴에 낙원을 만들고 아담과 릴리스를 그곳에 두었다. 낙원에는 금단의 열매에 손대지 않는다는 규칙 하나가 있었지만, 릴리스는 기어이 그 열매를 찾아냈고 창조의 이치를 깨달았다.</p></div>
@@ -1095,13 +1094,8 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
       <div class="wblock__txt"><span class="wblock__no">05</span><h3>봉인이 풀린 날</h3>
         <p>어느 날 밤, 뱀파이어 마스터들이 아담의 봉인 앞에 나타났다. 그들이 아담의 힘을 깨뜨리자 거대한 에너지가 터져 나왔고, 에슬라니아 전역에 결계가 내려앉았다. 그날 이후 이 땅에서 빠져나갈 길은 사라졌다.</p></div>
     </div>
-    <div class="wblock wblock--wide">
-      <figure class="wblock__fig" style="margin:0">
-        <picture>
-          <source media="(min-width: 767px)" srcset="assets/world_w06.jpg" width="3840" height="860">
-          <img src="assets/world_w06_mo.jpg" alt="" loading="lazy" width="800" height="934">
-        </picture>
-      </figure>
+    <div class="wblock">
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w06.jpg" alt="" width="1600" height="900" loading="lazy"></figure>
       <div class="wblock__txt"><span class="wblock__no">06</span><h3>두 진영이 맞선 땅</h3>
         <p>여러 나라가 조사단과 진압단을 들여보냈지만 살아 나온 사람은 없었다. 한 남자가 오랜 노력 끝에 뱀파이어 말살 조직 E.V.E를 세웠고, 그가 길러 낸 슬레이어들이 처음으로 결계 안에 들어섰다. 릴리스의 힘을 차지하려는 뱀파이어 마스터들과 그들을 막으려는 슬레이어들이 같은 땅에서 부딪치기 시작했다. 에슬라니아의 하늘은 그날부터 <span class="ember">핏빛</span>이다.</p></div>
     </div>
@@ -1595,13 +1589,16 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 (function(){
   var KEY = 'de_stamp_';
   document.querySelectorAll('[data-stamp]').forEach(function(card){
-    var id = card.dataset.stamp, done = card.querySelector('.stamp__done');
-    function mark(on){ card.classList.toggle('is-done', on); if (done) done.hidden = !on; }
+    var id = card.dataset.stamp, hits = card.querySelectorAll('[data-stamp-hit]');
+    /* v13: 완료 표시는 버튼 자체 — 문구를 「사전예약 완료」로, 윤곽형(.is-done), aria-disabled(포커스는 유지). 새로고침 뒤 localStorage 로 복원 */
+    function mark(on){ card.classList.toggle('is-done', on); hits.forEach(function(b){ b.classList.toggle('is-done', on); b.textContent = on ? '사전예약 완료' : (b.dataset.label || b.textContent); if (on) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled'); }); }
+    hits.forEach(function(b){ if (!b.dataset.label) b.dataset.label = b.textContent.trim(); });
     var saved = false;
     try { saved = localStorage.getItem(KEY + id) === '1'; } catch(e){}
     mark(saved);
     card.querySelectorAll('[data-stamp-hit]').forEach(function(btn){
       btn.addEventListener('click', function(){
+        if (btn.classList.contains('is-done')) return;      /* 완료 뒤 재클릭은 무동작 */
         try { localStorage.setItem(KEY + id, '1'); } catch(e){}
         mark(true);
       });
@@ -1943,6 +1940,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
   if (card) card.addEventListener('click', function(e){
     var btn = e.target.closest && e.target.closest('[data-stamp-hit]');
     if (!btn || typeof window.cmValidate !== 'function') return;
+    if (btn.classList.contains('is-done')) { e.preventDefault(); return; }   /* v13: 완료 상태면 검증·재제출 없음 */
     var r;
     try { r = cmValidate(); } catch(err){ return; }
     if (r && r.ok) return;
