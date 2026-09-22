@@ -90,6 +90,7 @@ html[data-still] .kv--video .kv__still { display: block; }
 /* 모바일은 딤을 화면보다 넓게 — 96vw 상한에 묶이면 타원이 72% 지점에서 0 이 돼
    헤드 양 끝 글자가 딤 밖에 놓인다(실측 최악 1.94 -> 3.72:1). `.sec{overflow:hidden}` 이 잘라낸다. */
 @media (max-width: 766px) {
+  .fab-community { bottom: 16px; }   /* v20: 하단 CTA 바가 없어져 커뮤니티 타일을 바닥 16px 로(base.css 의 88px 은 CTA 바가 있는 launch 용) */
   .kv--video .kv__logo::before {
     top: 80%;
     width: calc(var(--hr) * 90); height: calc(var(--hr) * 28);
@@ -836,7 +837,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 </header>
 
 <!-- ══════════ 1. main — KV + 진영 선택 게이트 ══════════ -->
-<section id="sec-main" class="sec kv kv--video" data-slot="main" data-cta-cover>
+<section id="sec-main" class="sec kv kv--video" data-slot="main">
   <div class="sec__bg">
     <video autoplay muted loop playsinline preload="auto"
            poster="assets/prereg_bg_poster.jpg" aria-hidden="true">
@@ -874,7 +875,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 </section>
 
 <!-- ══════════ 3. pre — 3분할 카드 ══════════ -->
-<section id="sec-pre" class="sec sec--plate sec--cards" data-slot="pre" data-cta-cover>
+<section id="sec-pre" class="sec sec--plate sec--cards" data-slot="pre">
   <div class="sec__bg"><picture><source media="(min-width: 767px)" srcset="assets/bg_pre.jpg"><img src="assets/bg_pre_mo.jpg" alt=""></picture></div>
   <div class="sec__inner">
     <div class="sec__head center">
@@ -1429,7 +1430,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 <!-- cm:markup-2 end -->
 
 <!-- ══════════ 모바일 하단 고정 CTA ══════════ -->
-<div class="mobile-cta is-covered" data-shell="mobile-cta"><a class="btn btn--primary btn--block" href="#sec-pre-form">지금 사전예약하기</a></div>
+<!-- v20(Justin 2026-09-22): 모바일 하단 고정 「지금 사전예약하기」 바 삭제 -->
 <a class="fab-community" href="https://cafe.naver.com/darkedenmobile" target="_blank" rel="noopener noreferrer" aria-label="네이버 공식 커뮤니티"><img src="assets/badges/naver_lounge_white.png" alt="" width="50" height="40"><span>공식 커뮤니티</span></a>
 
 <script>
