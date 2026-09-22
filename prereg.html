@@ -135,14 +135,7 @@ html[data-faction] .btn--primary { color: var(--white); }
   border-radius: 50%; border: 1px solid var(--gold-deep); background: #27231D;   /* 10% 금색을 카드색(#12141A)에 미리 섞은 값 — 판 배경 위에서도 사진이 비치지 않는다 */
   font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--gold-hi);
   letter-spacing: 0; vertical-align: .1em; }
-/* 선택 결과 한 줄 — 누르면 위 게이트로 돌아간다 */
-.pre-mine { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: .4rem 1.2rem;
-  width: 100%; margin-top: 1.6rem; padding: 1.2rem; background: none; border: 0; text-align: center; }
-.pre-mine__now { font-size: 1.4rem; color: var(--body); }
-.pre-mine__now b { color: var(--accent-glow); font-weight: 700; }
-.pre-mine__hint { font-size: 1.1rem; color: var(--mute); }
-.pre-mine__hint::before { content: "·"; margin-right: .6rem; color: var(--dim); }
-.pre-mine:hover .pre-mine__hint { color: var(--body); }
+/* v18: 「내 종족 …」 상태 줄(.pre-mine) 요소·규칙 삭제(Justin 2026-09-22) */
 /* 2단계 헤드 — h2 보다 한 단 작게 */
 /* ── 전폭 카드 2장 (②③) ────────────────────────────────
    2열 병렬은 카드 높이가 달라 상·하단이 어긋났다(실측 26px·32px).
@@ -159,7 +152,6 @@ html[data-faction] .btn--primary { color: var(--white); }
 /* ③ 은 ② 에 종속된 카드 — 헤더 한 단계 작게, 테두리 한 단계 낮게(위계가 보이게) */
 .pcard2--sub { border-color: rgba(43,46,54,.55); }
 .pcard2--sub .pcard2__t { font-size: 1.6rem; }
-.pcard2__promise { margin: 0 0 2.4rem; font-size: 1.5rem; font-weight: 800; color: var(--gold-hi); word-break: keep-all; text-align: center; }
 .pcard2__p { margin: 0 0 2.4rem; font-size: 1.4rem; color: var(--mute); word-break: keep-all; text-align: center; }
 /* 두 단 — 상·하단을 맞춘다(stretch) */
 .pcard2__body { display: grid; gap: 2.4rem; align-items: stretch; }
@@ -185,7 +177,7 @@ html[data-faction] .btn--primary { color: var(--white); }
   /* v6 부터 폼이 더 긴 열이다(기기 세그먼트 + 동의 4항). 양 끝을 맞추던 보정은 폐기.
      남는 쪽인 보상 프레임 블록을 폼 열에 대해 세로 중앙에 둔다(검토 1회차 4번). */
   .pcard2__form { justify-content: flex-start; }
-  .pcard2__body--store .sbadges { justify-content: flex-start; align-items: flex-start; }
+  .pcard2__body--store .sbadges { justify-content: flex-start; align-items: flex-start; align-self: start; }   /* v18: 스택 상단선 = 보상 이미지 상단(세로 가운데 두면 47px 아래에서 시작해 "위치가 안 맞아" 보임) */
   .pcard2__body { align-items: center; }
   /* W2 — 폼 열이 911px 까지 늘어나 「사전예약 완료하기」가 글자의 5.9배였다.
      폼을 40rem 으로 묶고 [보상 2×2 | 폼] 쌍을 카드 가운데에 놓는다. 보상 프레임은 160px 그대로. */
@@ -197,7 +189,9 @@ html[data-faction] .btn--primary { color: var(--white); }
   .pcard2__body--store { max-width: calc(320px + 1.6rem + 7rem + 40rem); margin-inline: auto; }
   /* v17(Justin "상자가 내용물에 비해 엄청 커진다") — ②③ 카드 상자 자체를 안쪽 띠 + 패딩(3.2rem×2)으로 묶어 가운데.
      1440 ≈ 1,068px(전 1,386) · 1920 ≈ 1,146. 안쪽 [보상|폼] 배치·입력창 폭은 그대로. 상자는 내용물 폭을 따른다, 화면 폭을 따르지 않는다. */
-  #sec-pre .pcard2 { max-width: calc(320px + 1.6rem + 7rem + 40rem + 6.4rem + 2px); margin-inline: auto; }   /* +2px = 카드 테두리 1px×2 — 안쪽 폼 열 544·입력창 386(1440) 그대로 */
+  #sec-pre .pcard2 { max-width: calc(320px + 1.6rem + 7rem + 40rem + 6.4rem + 2px); margin-inline: auto; }
+  #sec-event .grid--3 { grid-auto-rows: 1fr; }   /* v18: 럭키 드로우 6카드 두 줄 같은 높이 — 1주차 카드에만 응모 버튼(71px)이 있어 1행만 높았다(v6 부터). event 한정 */
+  #sec-pre .pre-notice, #sec-pre .pre-legal { max-width: calc(320px + 1.6rem + 7rem + 40rem + 6.4rem + 2px); margin-inline: auto; }   /* v18: 유의사항·확률형 고지 좌우선 = 카드 좌우선(Justin "얘만 삐죽") */   /* +2px = 카드 테두리 1px×2 — 안쪽 폼 열 544·입력창 386(1440) 그대로 */
 }
 
 /* 보상 이미지 영역 — 실서비스 전환 시 자리표시 2줄만 지우고 <img> 로 교체한다.
@@ -258,7 +252,7 @@ html[data-faction] .btn--primary { color: var(--white); }
    v16(2026-09-22): 세로 배치, 순서 Google → App Store → 원스토어(Justin), 세 배지 시각 높이 48px 통일(Apple·Google 최소 40px 이상). 원본은 Justin 제공 공식 배포본(assets/badges/README.md).
    Google 새 배지(270×80)·원스토어(1100×326)는 구운 여백이 없어 보정 없음. 원스토어 자리표시는 공식 배지 수급으로 폐기. */
 .sbadges { display: flex; flex-direction: column; align-items: center; gap: 12px; }   /* 모바일: 카드 안 보상 상자와 같이 가운데. PC 는 아래 min-width 블록에서 왼쪽 정렬 */
-.sbadge { display: inline-flex; align-items: center; line-height: 0; }
+.sbadge { display: inline-flex; align-items: center; justify-content: center; width: 162px; line-height: 0; }   /* v18: 162px 슬롯 가운데 — 원본 비율이 달라(Google 3.375·ONE 3.37·Apple 3.18) 같은 높이면 Apple 이 10px 좁다. 같은 폭은 Google "same size or larger" 규정 위반이라 같은 높이 + 슬롯 대칭 */
 .sbadge:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 4px; }
 .sbadge__img { display: block; width: auto; height: 48px; }
 /* v13 — 헤더 우상단 「✓ 인증 완료」 표시는 제거(Justin). 완료는 「사전예약 완료하기」 버튼 자체가 완료 상태로 바뀌어 보여 준다 */
@@ -929,11 +923,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
       </div>
     </div>
 
-    <!-- 상태 줄 + 미선택 고지 1블록. 클릭하면 위 카드로 돌아간다 -->
-    <button class="pre-mine" type="button" data-mine-jump>
-      <span class="pre-mine__now">내 종족 <b data-mine-label>선택 안 함</b></span>
-      <span class="pre-mine__hint">사전예약 완료 전까지 변경할 수 있습니다</span>
-    </button>
+    <!-- v18(Justin 2026-09-22): 「내 종족 선택 안 함 · 사전예약 완료 전까지 변경할 수 있습니다」 상태 줄 삭제 — 미선택 고지만 남김 -->
     <p class="pick__note">종족은 선택하지 않아도 참여할 수 있으며, 사전예약 집계용으로 게임 내 선택과는 무관합니다.</p>
 
     <!-- ② 주 행동 + ③ 추가 보상. PC 는 2/3 : 1/3 2단, 모바일은 세로 -->
@@ -944,7 +934,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
         <div class="pcard2__head">
           <b class="step">2</b><b class="pcard2__t">휴대폰 사전예약</b>
         </div>
-        <p class="pcard2__promise">휴대폰 사전예약 완료 시 보상 4종 전원 지급!</p>
+        <p class="pcard2__p">휴대폰 사전예약 완료 시 보상 4종 전원 지급!</p>   <!-- v18: ③ 서브 문구와 같은 서식(--mute 1.4rem 가운데). 문안은 추후 좌 보상 아이콘 영역으로 이동 예정(Justin) -->
         <div class="pcard2__body">
           <!-- 보상 프레임 4칸. 표시 160px · 원본 512×512 PNG 투명(05 에셋 요청서 확정값).
                실서비스 전환 시 자리표시 2줄을 지우고 <img> 로 교체 — data-asset 이 파일명·규격이다. -->
@@ -1312,7 +1302,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 <!-- ══════════ 9. footer ══════════ -->
 <footer class="site-footer" data-shell="footer">
   <div class="sec__inner">
-    <p><strong style="color:var(--body)">플레이웍스(주)</strong> | 대표 김광열 | 사업자등록번호 220-87-53096 | 통신판매업신고 {{통신판매업신고번호}} | 주소 {{주소}}</p>
+    <p><strong style="color:var(--body)">플레이웍스(주)</strong> | 대표 김광열 | 사업자등록번호 220-87-53096 | 통신판매업신고 {{통신판매업신고번호}} | 주소 서울특별시 강남구 테헤란로 333 (역삼동, 신도벤처타워) 6층</p>
     <p>개인정보 보호책임자 {{개인정보보호책임자}} | 고객센터 {{고객센터메일}}</p>
     <p>개인정보 처리위탁 — 문자 발송: {{수탁사}} (사전예약 안내 문자 발송 업무)</p>
     <p style="margin-top:1.2rem">
@@ -1449,7 +1439,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 
 <!-- ══════════ 모바일 하단 고정 CTA ══════════ -->
 <div class="mobile-cta is-covered" data-shell="mobile-cta"><a class="btn btn--primary btn--block" href="#sec-pre-form">지금 사전예약하기</a></div>
-<a class="fab-community" href="https://cafe.naver.com/darkedenmobile" target="_blank" rel="noopener noreferrer" aria-label="네이버 공식 커뮤니티" data-placeholder="{{네이버 공식 커뮤니티 아이콘}}"><svg viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M6 5h16a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-8.5L8 24v-4H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z"/><circle cx="10" cy="12.5" r="1.1"/><circle cx="14" cy="12.5" r="1.1"/><circle cx="18" cy="12.5" r="1.1"/></svg><b>네이버 공식 커뮤니티 · 아이콘 대기</b></a>
+<a class="fab-community" href="https://cafe.naver.com/darkedenmobile" target="_blank" rel="noopener noreferrer" aria-label="네이버 공식 커뮤니티"><img src="assets/badges/naver_lounge_white.png" alt="" width="50" height="40"><span>공식 커뮤니티</span></a>
 
 <script>
 (function(){

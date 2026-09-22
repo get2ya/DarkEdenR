@@ -319,28 +319,21 @@ html[data-shot] .prail, html.is-modal-open .prail, body.is-modal-open .prail { d
    판 위에는 --mute 작은 글자를 두지 않는다(카드 안은 카드 면이 있어 예외). */
 .sec--plate .sec__head p, .sec--plate .sec__head .t-sub { color: var(--body); }
 
-/* ---------- 플로팅 커뮤니티 아이콘 v15 (2026-09-22, Justin "천상비K 처럼 네이버 공식 커뮤니티 아이콘을 우하단에 계속 따라다니게") — 마크업은 페이지 .mobile-cta 뒤 1줄, JS 없음
-   PC ≥767: 우하단 24px, 판 48px(px 고정), 글리프 28px. 모바일 <767: 하단 CTA 바(76px, z50) 위 — right 16 / bottom 88, 44px(터치 최소).
-   공식 아이콘(네이버 게임 라운지/카페 글리프)은 상표라 재그리기 금지 → 수급 전(07 Q56·N-19)에는 [data-placeholder] = 점선 --line 원 + 우리가 그린 범용 말풍선 윤곽(--body 1.5px).
-   색: 판 --char·테두리 --line·글리프 --body, 글로우·그림자 없음(표식 조건), hover/focus 테두리 --gold(레일과 같은 약속). 이름표는 레일 .prail b 와 같은 모양·타이밍(hover·focus-visible, 첫 로드 미표시).
-   숨김: html[data-shot](덱 캡처 불변)·모달 열림·인쇄. z 40(헤더 50·모달 90 아래, 레일 45 와 겹치지 않음 — 레일은 세로 중앙 160px). */
-.fab-community { position: fixed; z-index: 40; right: 16px; bottom: 88px; width: 44px; height: 44px; display: grid; place-items: center;
-  border-radius: 50%; background: var(--char); border: 1px solid var(--line); color: var(--body); text-decoration: none;
-  transition: border-color .2s ease; }
-.fab-community[data-placeholder] { border-style: dashed; }
-.fab-community svg { display: block; width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
-.fab-community svg circle { fill: currentColor; stroke: none; }
-.fab-community:hover, .fab-community:focus-visible { border-color: var(--gold); border-style: solid; }
+/* ---------- 플로팅 커뮤니티 아이콘 v15 → v18 (2026-09-22, Justin "네이버 라운지 공식 아이콘 + 「공식 커뮤니티」 글자 아래") — 마크업은 페이지 .mobile-cta 뒤 1줄, JS 없음
+   타일: PC 68×64(radius 16, --char 판, 1px --line 실선) 안에 글리프 28×22(assets/badges/naver_lounge_white.png 50×40 흰 1도, 브랜드 자산 = 원칙 4 예외 2, 순백 예외 아님)
+   + 라벨 「공식 커뮤니티」 --body 10px 700 nowrap, 글리프–라벨 5px, 상하 패딩 8. 모바일 64×60·글리프 24×19·라벨 10px(9px 이하 금지), 하단 CTA 바 위(right 16 / bottom 88).
+   hover/focus 테두리 --gold, focus 링 --gold-hi. 이름표(호버 툴팁)는 라벨이 상시라 삭제. 숨김 html[data-shot](덱 캡처 불변)·모달·print. z 40. 상표 사용 규정·SVG 수급은 07 Q56. */
+.fab-community { position: fixed; z-index: 40; right: 16px; bottom: 88px; width: 64px; height: 60px; box-sizing: border-box; padding: 8px 4px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  border-radius: 16px; background: var(--char); border: 1px solid var(--line); color: var(--body); text-decoration: none; transition: border-color .2s ease; }
+.fab-community img { display: block; width: 24px; height: 19px; }
+.fab-community span { display: block; font-family: var(--font); font-size: 10px; font-weight: 700; line-height: 1; letter-spacing: 0; white-space: nowrap; color: var(--body); }
+.fab-community:hover, .fab-community:focus-visible { border-color: var(--gold); }
 .fab-community:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; }
-.fab-community b { position: absolute; right: 100%; top: 50%; margin-right: 8px; padding: .5em .9em; white-space: nowrap;
-  font-family: var(--font-display, var(--font)); font-weight: 400; font-size: max(1.2rem, 12px); letter-spacing: .06em; line-height: 1;
-  color: var(--body); background: rgba(7,7,11,.86); border: 1px solid var(--line); border-radius: 3px;
-  opacity: 0; transform: translate(6px, -50%); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
-.fab-community:hover b, .fab-community:focus-visible b { opacity: 1; transform: translate(0, -50%); }
 @media (min-width: 767px) {
-  .fab-community { right: 24px; bottom: 24px; width: 48px; height: 48px; }
-  .fab-community svg { width: 28px; height: 28px; }
+  .fab-community { right: 24px; bottom: 24px; width: 68px; height: 64px; }
+  .fab-community img { width: 28px; height: 22px; }
 }
 html[data-shot] .fab-community, html.is-modal-open .fab-community, body.is-modal-open .fab-community { display: none; }
 @media print { .fab-community { display: none; } }
-@media (prefers-reduced-motion: reduce) { .fab-community, .fab-community b { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .fab-community { transition: none; } }
