@@ -6,7 +6,8 @@
      (3) 히어로 <video>(.kv video) — 파서가 <source> 를 넣는 순간 떼어 두어(MutationObserver, 브라우저 요청 0) canPlayType 으로 고른 소스 1개를 fetch 전량 수신 → blob 으로 재생(걷힐 때 0초부터)
      (4) 웹폰트 — window load 뒤 document.fonts.ready(막대는 99% 에서 대기)
    진행률 = 받은 바이트 / 전체 바이트(단조 증가). 완료: 100% 에서 HOLD_MS → data-loading="fade"(본문이 덮개 아래에 나타나고 영상 재생 시작) → FADE_MS 페이드 → 덮개 제거 → html[data-loaded].
-   생략(덮개 없이 바로 본문): <1024 · file: · navigator.webdriver(캡처·검사 도구 → 촬영 결과·덱 불변) · html[data-shot] · 같은 탭 재방문(sessionStorage de_loaded) · ?loader=0
+   생략(덮개 없이 바로 본문): <1024 · file: · navigator.webdriver(캡처·검사 도구 → 촬영 결과·덱 불변) · html[data-shot] · 같은 탭 뒤로/앞으로 재방문(sessionStorage de_loaded — 새로고침은 예외, 다시 보임) · ?loader=0
+   새로고침(PC): history.scrollRestoration=manual + load 뒤·걷히기 직전 scrollTo(behavior:'instant') → 항상 맨 위부터, 애니메이션 없이(v16).
    강제: ?loader=force(도구 검증용 — 폭·file: 조건은 못 넘김). 로드 중 data-shot 이 붙으면 즉시 제거.
    안전 해제: 스트림(영상·PNG)이 진행 중인데 STALL_MS(3초) 동안 수신 0 → 해제(첫 바이트 전·이미지만 남은 구간은 판정 안 함), 절대 상한 CAP_MS(20초 — 총 ~21MB 가 20Mbps 에서 13초라 12초는 짧다, 실측 2026-09-22) → 해제(받던 것은 중단, 영상은 원래 <source> 스트리밍으로 복귀).
    html[data-loader-end]=ok|stall|cap|shot 로 사유를, html[data-loader-t] 에 bytes·load·fonts·video·end 시점(ms)을 남긴다.
@@ -20,10 +21,16 @@
   var HOLD_MS = 300, FADE_MS = 400, STALL_MS = 3000, CAP_MS = 20000, SIZES_WAIT_MS = 1500, MQ = '(min-width: 1024px)';
   var q = /[?&]loader=([^&#]*)/.exec(win.location.search), mode = q ? q[1] : '';
   var reduce = win.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var navType = ''; try { var ne = win.performance.getEntriesByType('navigation')[0]; navType = ne ? ne.type : ''; } catch (e) {}
+  var pc = win.matchMedia(MQ).matches;
+  /* v16: 새로고침(Ctrl+R)은 PC 에서 항상 맨 위부터 — 브라우저의 스크롤 위치 복원을 끄고, 같은 탭 재방문 생략은 뒤로/앞으로 이동에만 적용(새로고침은 로더를 다시 보여 준다, Justin 2026-09-22) */
+  var isReload = pc && navType === 'reload';
+  function toTop() { try { win.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { win.scrollTo(0, 0); } }   /* 페이지 CSS scroll-behavior:smooth 를 타지 않게(PD v16 조건) */
+  if (isReload) { try { win.history.scrollRestoration = 'manual'; } catch (e) {} win.addEventListener('load', toTop); }
   var skip = nav.webdriver === true || root.hasAttribute('data-shot') || mode === '0';
-  try { if (win.sessionStorage.getItem('de_loaded') === '1') skip = true; } catch (e) {}
+  try { if (navType !== 'reload' && win.sessionStorage.getItem('de_loaded') === '1') skip = true; } catch (e) {}
   if (mode === 'force') skip = false;
-  if (!win.matchMedia(MQ).matches || win.location.protocol === 'file:' || !win.fetch || !win.ReadableStream || !win.AbortController || !('MutationObserver' in win)) skip = true;
+  if (!pc || win.location.protocol === 'file:' || !win.fetch || !win.ReadableStream || !win.AbortController || !('MutationObserver' in win)) skip = true;
   root.setAttribute('data-loading', skip ? 'skip' : 'on');
   if (skip) { root.setAttribute('data-loaded', ''); return; }
 
@@ -198,6 +205,7 @@
     var hold = reduce ? 0 : HOLD_MS, fade = reduce ? 0 : FADE_MS;
     win.setTimeout(function () {
       root.setAttribute('data-loading', 'fade');   /* 본문이 덮개 아래에 나타난다(loader.css: 숨김은 "on" 만, 덮개는 on·fade 둘 다) */
+      if (isReload) toTop();                      /* 걷히는 순간 한 번 더 — 그 사이 복원이 다시 밀어 넣는 경우 대비 */
       startVideo();
       if (el()) { box.style.transition = 'opacity ' + fade + 'ms ease'; box.style.opacity = '0'; }
       win.setTimeout(remove, fade);

@@ -185,7 +185,7 @@ html[data-faction] .btn--primary { color: var(--white); }
   /* v6 부터 폼이 더 긴 열이다(기기 세그먼트 + 동의 4항). 양 끝을 맞추던 보정은 폐기.
      남는 쪽인 보상 프레임 블록을 폼 열에 대해 세로 중앙에 둔다(검토 1회차 4번). */
   .pcard2__form { justify-content: flex-start; }
-  .pcard2__body--store .sbadges { justify-content: flex-start; }
+  .pcard2__body--store .sbadges { justify-content: flex-start; align-items: flex-start; }
   .pcard2__body { align-items: center; }
   /* W2 — 폼 열이 911px 까지 늘어나 「사전예약 완료하기」가 글자의 5.9배였다.
      폼을 40rem 으로 묶고 [보상 2×2 | 폼] 쌍을 카드 가운데에 놓는다. 보상 프레임은 160px 그대로. */
@@ -251,21 +251,13 @@ html[data-faction] .btn--primary { color: var(--white); }
   .pcard2--sub .pcard2__t { font-size: 1.4rem; }
 }
 
-/* ③ 스토어 공식 배지 — 브랜드 자산이라 `.btn` 을 쓰지 않는다(그림자·테두리·색 변경 금지).
-   여백(clear space)은 배지 높이의 1/4 = 11px 이상(Apple·Google 공통 규칙). */
-.sbadges { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+/* ③ 스토어 공식 배지 — 브랜드 자산이라 `.btn` 을 쓰지 않는다(그림자·테두리·색 변경 금지). 여백(clear space)은 배지 높이의 1/4 이상.
+   v16(2026-09-22): 세로 배치, 순서 Google → App Store → 원스토어(Justin), 세 배지 시각 높이 48px 통일(Apple·Google 최소 40px 이상). 원본은 Justin 제공 공식 배포본(assets/badges/README.md).
+   Google 새 배지(270×80)·원스토어(1100×326)는 구운 여백이 없어 보정 없음. 원스토어 자리표시는 공식 배지 수급으로 폐기. */
+.sbadges { display: flex; flex-direction: column; align-items: center; gap: 12px; }   /* 모바일: 카드 안 보상 상자와 같이 가운데. PC 는 아래 min-width 블록에서 왼쪽 정렬 */
 .sbadge { display: inline-flex; align-items: center; line-height: 0; }
 .sbadge:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 4px; }
-.sbadge__img { display: block; width: auto; }
-.sbadge__img--apple { height: 44px; }
-/* Google PNG 는 캔버스 646×250 안에 배지가 646×192(76.8%)뿐이라 위아래 여백이 구워져 있다.
-   같은 height 를 주면 배지가 작아 보이므로 시각 높이가 44px 이 되게 키우고 구운 여백만큼 당긴다. */
-.sbadge__img--google { height: 57.3px; margin-block: -6.65px; }
-/* 원스토어는 공식 배포본이 없다(M07 README) — 같은 높이의 자리표시. 우리 금색·윤곽형 규칙은 쓰지 않는다 */
-.sbadge--hold { height: 44px; padding: 0 1.6rem; border-radius: .6rem; background: #12141A; border: 1px dashed var(--line);
-  flex-direction: column; justify-content: center; align-items: center; line-height: 1.15; text-decoration: none; }
-.sbadge--hold b { font-size: 1.3rem; font-weight: 700; color: var(--body); }
-.sbadge--hold small { font-size: 1rem; color: var(--mute); }
+.sbadge__img { display: block; width: auto; height: 48px; }
 /* v13 — 헤더 우상단 「✓ 인증 완료」 표시는 제거(Justin). 완료는 「사전예약 완료하기」 버튼 자체가 완료 상태로 바뀌어 보여 준다 */
 .btn--primary.is-done { background: var(--char); color: var(--gold-hi); border: 1px solid var(--gold-deep); box-shadow: none; cursor: default; }
 .btn--primary.is-done::before { content: "✓"; margin-right: .6rem; }
@@ -988,17 +980,17 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
             <figure class="rwbox__i"><span class="rwbox__ph" data-asset="reward_pre_01 512x512" aria-hidden="true"><b>아이콘 준비 중</b><small>512×512</small></span><figcaption>개조 재료 상자</figcaption></figure>
             <p class="rwbox__tag"><span class="it">개조 재료 상자 ×20</span><span class="sep"> · </span><span class="it">보석 상자 ×5</span></p>
           </div>
-          <!-- 각 마켓 공식 배지. 순서 고정(App Store 먼저 — Apple 가이드) · 그림자·테두리·색 변경 금지라 .btn 을 쓰지 않는다.
-               원스토어는 공식 배포본이 없어 자리표시다(M07 README). -->
+          <!-- 각 마켓 공식 배지(2026-09-22 Justin 제공 원본, assets/badges/README.md). v16: 세로 배치, 순서 Google → App Store → 원스토어(Justin).
+               그림자·테두리·색 변경 금지라 .btn 을 쓰지 않는다. 클릭 = 새 탭으로 스토어 이동(URL 값 대기). -->
           <div class="sbadges">
+            <a class="sbadge" href="{{GOOGLEPLAY_URL}}" target="_blank" rel="noopener noreferrer" aria-label="Google Play에서 사전 등록">
+              <img class="sbadge__img sbadge__img--google" src="assets/badges/googleplay_preregister_ko.png" alt="Google Play에서 사전 등록" width="270" height="80">
+            </a>
             <a class="sbadge" href="{{APPSTORE_URL}}" target="_blank" rel="noopener noreferrer" aria-label="App Store에서 사전 주문하기">
-              <img class="sbadge__img sbadge__img--apple" src="assets/badges/appstore_preorder_ko.svg" alt="App Store에서 사전 주문하기">
+              <img class="sbadge__img sbadge__img--apple" src="assets/badges/appstore_preorder_ko.svg" alt="App Store에서 사전 주문하기" width="130" height="41">
             </a>
-            <a class="sbadge" href="{{GOOGLEPLAY_URL}}" target="_blank" rel="noopener noreferrer" aria-label="Google Play에서 다운로드">
-              <img class="sbadge__img sbadge__img--google" src="assets/badges/googleplay_getiton_ko.png" alt="Google Play에서 다운로드">
-            </a>
-            <a class="sbadge sbadge--hold" href="{{ONESTORE_URL}}" target="_blank" rel="noopener noreferrer" aria-label="원스토어에서 사전예약">
-              <b>원스토어</b><small>공식 배지 대기</small>
+            <a class="sbadge" href="{{ONESTORE_URL}}" target="_blank" rel="noopener noreferrer" aria-label="원스토어에서 사전예약하기">
+              <img class="sbadge__img sbadge__img--one" src="assets/badges/onestore_preregister_kr_b.png" alt="원스토어에서 사전예약하기" width="1100" height="326">
             </a>
           </div>
         </div>
@@ -1116,7 +1108,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
 <!-- ══════════ class — 진영 탭 × 클래스 4 (화살표·스와이프·키보드) ══════════ -->
 
 <!-- ══════════ 7. class — 진영 탭 × 클래스 4 ══════════ -->
-<section id="sec-class" class="sec sec--plate sec--art" data-slot="class" data-bg-f="slayer" data-preload="assets/class_assault@2x.png assets/class_bloodwalker@2x.png assets/class_chaser@2x.png assets/class_darkeye@2x.png assets/class_demonica@2x.png assets/class_occultist@2x.png assets/class_titan@2x.png assets/class_valkyrie@2x.png">
+<section id="sec-class" class="sec sec--plate sec--art" data-slot="class" data-bg-f="slayer" data-preload="assets/class_assault@2x.webp assets/class_bloodwalker@2x.webp assets/class_chaser@2x.webp assets/class_darkeye@2x.webp assets/class_demonica@2x.webp assets/class_occultist@2x.webp assets/class_titan@2x.webp assets/class_valkyrie@2x.webp">
   <div class="sec__bg"><picture><source media="(min-width: 767px)" srcset="assets/bg_class_sla.jpg"><img src="assets/bg_class_sla_mo.jpg" alt="" data-bg-f="slayer" loading="lazy"></picture><picture><source media="(min-width: 767px)" srcset="assets/bg_class_vam.jpg"><img src="assets/bg_class_vam_mo.jpg" alt="" data-bg-f="vampire" loading="lazy"></picture></div>
   <div class="sec__inner">
     <div class="sec__head center"><span class="t-eyebrow ko">클래스</span><h2>나에게 맞는 클래스를 찾아보세요</h2></div>
@@ -1131,7 +1123,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
       <div class="cls__stage">
         <div class="cls__viewer" role="group" aria-label="클래스 보기">
           <button class="cls__nav cls__nav--prev" type="button" aria-label="이전 클래스">&#9664;</button>
-          <figure class="cls__portrait"><img data-cls-img src="assets/class_assault@2x.png" alt="어썰트"></figure>
+          <figure class="cls__portrait"><img data-cls-img src="assets/class_assault@2x.webp" alt="어썰트"></figure>
           <button class="cls__nav cls__nav--next" type="button" aria-label="다음 클래스">&#9654;</button>
         </div>
         <div class="cls__info">
@@ -1189,7 +1181,7 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
   function paint(){
     var items = list(), d = items[index];
     if (!d) return;
-    imgEl.src = 'assets/class_' + d.dataset.id + '@2x.png';
+    imgEl.src = 'assets/class_' + d.dataset.id + '@2x.webp';
     imgEl.alt = d.dataset.name;
     nameEl.textContent = d.dataset.name;
     tagEl.textContent  = d.dataset.tag;

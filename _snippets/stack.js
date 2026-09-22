@@ -3,6 +3,7 @@
    (1) 앞 섹션은 스크롤의 절반 속도로 밀려 올라가며 어두워진다(패럴랙스)
    (2) 뒤 섹션은 그대로 올라와 앞을 덮는다(문서 순서 = 그리기 순서, z-index 순차 부여). 덮으려면 뒤 섹션이 불투명해야 하므로
        배경이 투명한 섹션에는 잉크 배경을 인라인으로 준다(정지 화면은 body 와 같은 잉크라 픽셀 동일)
+   v16(2026-09-22): 되감기 끝(t→0)에 막 opacity 를 ''(=1) 로 지우던 결함 수정 → '0'.
    v13 경량화(Justin "PC 가 느려진다"): 어두워짐을 filter:brightness()(섹션 전체 재래스터화) 대신 섹션 위 잉크 막(.stk-veil)의 opacity 로 —
    합성만 일어나 비용이 수십 분의 일. scale() 제거. 섹션 타이틀 스태거 제거(Justin "나타나기 연출 불필요"). 히어로가 밀려 올라가는 동안 배경 영상 일시정지.
    전부 스크롤 위치에 묶여 역스크롤이면 자동으로 되감긴다. 전환 구간 = 뒤 섹션 머리가 화면 아래(100vh)에서 화면 위(0)에 닿기까지.
@@ -29,7 +30,7 @@
 
   function clearSec(s, i) {
     s.style.transform = ''; s.style.willChange = '';
-    if (veils[i]) { veils[i].style.opacity = ''; veils[i].style.willChange = ''; }
+    if (veils[i]) { veils[i].style.opacity = '0'; veils[i].style.willChange = ''; }   /* v16: '' 로 지우면 인라인 opacity:0 까지 사라져 계산값 1 → 되감기 끝에 섹션이 검게 덮였다(Justin 2026-09-22) */
   }
   function clear() { secs.forEach(clearSec); heroPlay(); }
 
