@@ -1,0 +1,12 @@
+/* loader.css — 첫 로드 진행률 로딩 화면 v14 (공용). 동작은 loader.js. 막대 규격은 Uiverse SteveBloX wise-moose-53 (150×10, 반지름 7) 그대로, 색은 토큰:
+   채움 --gold-hi(빈 잉크 화면의 유일한 빛 = 소실점 색, 글로우 없음 — 순백 예외를 두지 않는다, PD 2026-09-22), 트랙 --body 18%, 숫자 --mute.
+   숫자 글꼴은 시스템 서체 고정 — 로더가 웹폰트를 기다리는 동안 로더 글자가 바뀌지 않게.
+   본문 숨김은 data-loading="on" 일 때만, 덮개는 on·fade 둘 다 — 페이드 0.4초 동안 본문이 덮개 아래에서 드러난다(PD 검토 1). html[data-loading="on"] 일 때만 덮개가 보인다는 옛 문장은 폐기 — 스크립트가 <head> 에서 속성을 먼저 심으므로 첫 페인트부터 잉크. 캡처·검사(webdriver·data-shot)·모바일·file:·재방문은 "skip". */
+html[data-loading="on"] { overflow: hidden; scrollbar-gutter: stable; }   /* 걷힐 때 스크롤바 폭만큼 본문이 밀리지 않게 자리를 미리 잡아 둔다 */
+html[data-loading="on"] body > *:not(#loader) { visibility: hidden; }
+.loader { display: none; }
+html[data-loading="on"] .loader, html[data-loading="fade"] .loader { display: block; position: fixed; inset: 0; z-index: 1000; background: var(--ink, #07070B); }
+.loader__bar { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 10px; border-radius: 7px; overflow: hidden; background: rgba(216, 212, 203, 0.18); }
+.loader__fill { display: block; width: 0; height: 10px; border-radius: 7px; background: var(--gold-hi, #FFE4A8); transition: width .25s ease-out; }
+.loader__pct { position: absolute; top: calc(50% + 16px); left: 50%; transform: translateX(-50%); font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Malgun Gothic", sans-serif; font-weight: 600; font-size: 12px; line-height: 1; letter-spacing: .06em; color: var(--mute, #8E8B84); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .loader__fill { transition: none; } }
