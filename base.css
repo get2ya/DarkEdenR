@@ -118,7 +118,7 @@ html[data-faction] .badge--accent { color: var(--white); }
 @media (min-width: 767px) { .mobile-cta { display: none; } }
 .site-footer { padding: 4rem 2rem 10rem; background: #050508; border-top: 1px solid var(--line); font-size: 1.2rem; color: var(--mute); line-height: 1.7; }
 .site-footer a { color: var(--body); margin-right: 1.4rem; }
-.site-footer p { margin: .4rem 0; }
+.site-footer p { margin: .4rem 0; word-break: keep-all; overflow-wrap: anywhere; }   /* v20.1: 법정 줄이 지명·항목 중간에서 갈라지지 않게(390 「강남 / 구」, PD) — 한 어절이 줄보다 길면 그때만 끊는다 */
 .rating-mark { display: inline-block; border: 1px solid var(--line); padding: .2rem .6rem; border-radius: .3rem; color: var(--body); font-weight: 700; }
 
 /* ---------- KV(main) 공통 ---------- */
