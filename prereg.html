@@ -623,6 +623,8 @@ html[data-ratio="pending"] .pick__pending { display: block; }
 
 /* 스크롤 진입 연출 — transform·opacity 만, filter 는 blur 만. 이동 40px */
 .wblock__fig { position: relative; opacity: 0; filter: blur(8px); transition: opacity .8s ease, filter .8s ease; }
+/* lazy 이미지 높이 예약 — width/height 속성으로 비율을 미리 잡아 로드 시 +1,080px 점프(CLS)를 없앤다(PD 2026-09-22). height:auto 가 없으면 속성값 높이로 굳는다 */
+.wblock__fig img { width: 100%; height: auto; }
 .wblock__txt > * { opacity: 0; transform: translateX(-40px); transition: opacity .6s ease, transform .6s ease; }
 .wblock:nth-child(even) .wblock__txt > * { transform: translateX(40px); }
 .wblock.is-in .wblock__fig { opacity: 1; filter: blur(0); }
@@ -1069,35 +1071,35 @@ html[data-faction] .cm-notice__foot .btn--primary { color: var(--white); }
     </div>
 
     <div class="wblock" data-ember>
-      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w01.jpg" alt=""></figure>
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w01.jpg" alt="" width="1600" height="900"></figure>
       <div class="wblock__txt"><span class="wblock__no">01</span><h3>낙원과 금단의 열매</h3>
         <p>신은 에덴에 낙원을 만들고 아담과 릴리스를 그곳에 두었다. 낙원에는 금단의 열매에 손대지 않는다는 규칙 하나가 있었지만, 릴리스는 기어이 그 열매를 찾아냈고 창조의 이치를 깨달았다.</p></div>
     </div>
     <div class="wblock">
-      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w02.jpg" alt="" loading="lazy"></figure>
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w02.jpg" alt="" width="1600" height="900" loading="lazy"></figure>
       <div class="wblock__txt"><span class="wblock__no">02</span><h3>열두 형상과 추방</h3>
         <p>릴리스는 열두 개의 형상을 빚어 하나하나에 생명을 불어넣었다. 신은 크게 노해 그들을 낙원 밖으로 내쫓고 빛의 축복마저 거두었다. 빛을 잃은 그들에게는 밤만이 남았다.</p></div>
     </div>
     <div class="wblock">
-      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w03.jpg" alt="" loading="lazy"></figure>
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w03.jpg" alt="" width="1600" height="900" loading="lazy"></figure>
       <div class="wblock__txt"><span class="wblock__no">03</span><h3>낙원 밖에서 흘린 첫 피</h3>
         <p>신은 아담에게 이브를 보냈고, 두 사람은 카인과 아벨을 낳았다. 이를 시기한 릴리스는 카인을 꾀어 아벨을 해치게 만들었다. 이 일을 알게 된 이브가 릴리스와 맞붙었으나 두 사람 모두 목숨을 잃었고, 릴리스는 영혼만 남은 채 흩어졌다.</p></div>
     </div>
     <div class="wblock">
-      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w04.jpg" alt="" loading="lazy"></figure>
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w04.jpg" alt="" width="1600" height="900" loading="lazy"></figure>
       <div class="wblock__txt"><span class="wblock__no">04</span><h3>아담의 봉인</h3>
         <p>절망한 아담은 릴리스의 영혼을 거두어 에덴 안에 가두었다. 그리고 자기 자신을 열쇠로 삼아 에덴의 문을 영원히 잠갔다. 그 뒤로 수백 년 동안 아무도 그 문을 열지 못했다.</p></div>
     </div>
     <div class="wblock">
-      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w05.jpg" alt="" loading="lazy"></figure>
+      <figure class="wblock__fig" style="margin:0"><img src="assets/world_w05.jpg" alt="" width="1600" height="900" loading="lazy"></figure>
       <div class="wblock__txt"><span class="wblock__no">05</span><h3>봉인이 풀린 날</h3>
         <p>어느 날 밤, 뱀파이어 마스터들이 아담의 봉인 앞에 나타났다. 그들이 아담의 힘을 깨뜨리자 거대한 에너지가 터져 나왔고, 에슬라니아 전역에 결계가 내려앉았다. 그날 이후 이 땅에서 빠져나갈 길은 사라졌다.</p></div>
     </div>
     <div class="wblock wblock--wide">
       <figure class="wblock__fig" style="margin:0">
         <picture>
-          <source media="(min-width: 767px)" srcset="assets/world_w06.jpg">
-          <img src="assets/world_w06_mo.jpg" alt="" loading="lazy">
+          <source media="(min-width: 767px)" srcset="assets/world_w06.jpg" width="3840" height="860">
+          <img src="assets/world_w06_mo.jpg" alt="" loading="lazy" width="800" height="934">
         </picture>
       </figure>
       <div class="wblock__txt"><span class="wblock__no">06</span><h3>두 진영이 맞선 땅</h3>
