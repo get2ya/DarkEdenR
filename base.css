@@ -278,3 +278,43 @@ html[data-shot] .prail, html.is-modal-open .prail, body.is-modal-open .prail { d
 .mobile-cta.is-covered { transform: translateY(110%); opacity: 0; visibility: hidden; pointer-events: none;
   transition: transform .25s ease, opacity .25s ease, visibility 0s linear .25s; }
 @media (prefers-reduced-motion: reduce) { .site-header::before, .prail i, .prail b, .mobile-cta, .mobile-cta.is-covered { transition: none; } }
+
+/* ---------- 섹션 배경 판(plate) v10 (2026-09-22) — 04 §6.3·6.4, PD·비서 확정 ----------
+   배경 원화는 딤을 굽지 않고(그레이딩만) CSS 가 한 번만 덮는다. 판 = 섹션 위쪽 최대 한 화면.
+   머리(아이브로우·h2·서브) 뒤 35% 까지는 얕게, 카드·폼 자리부터 --dim-b, 끝은 섹션 바닥색과 같은 값으로 녹인다.
+   섹션마다 .sec--plate + 종류 클래스 하나. 히어로(.kv)는 별도 규칙이라 대상이 아니다. */
+.sec--plate .sec__bg { height: min(100%, var(--plate-h, 100vh)); bottom: auto; }
+.sec--plate .sec__bg::after { background: linear-gradient(180deg,
+  rgba(7,7,11,var(--dim-a)) 0%, rgba(7,7,11,var(--dim-a)) 35%,
+  rgba(7,7,11,var(--dim-b)) 70%, var(--sec-ground, var(--ink)) 100%); }
+.sec--text   { --dim-a: .40; --dim-b: .70; }   /* 텍스트만 얹힘 — 3층 M 원화(R특징·launch market·channel) */
+.sec--cards  { --dim-a: .45; --dim-b: .85; }   /* 카드·폼 얹힘 — 3층 M 원화(사전예약·이벤트) */
+.sec--art    { --dim-a: .25; --dim-b: .65; }   /* 1층 R 일러(클래스 종족 선택 배경) — 1층 딤 0~35% 규칙 안 */
+.sec--recall { --dim-a: .40; --dim-b: .80; }   /* 2층 프롤로그 컷(미디어 w08) — 가장 밝은 컷이라 카드 자리 .80 */
+/* 섹션 배경 2단계 — 팔레트 '딥차콜'. 이미지 없이 톤만 한 단계 올린다(세계관·launch 세력) */
+.sec--charcoal { background: #12141A; --sec-ground: #12141A; }
+/* 층 전환 밴드(§6.4 ②) — 광원이 아니라 표식 예외(글로우 없음·수평 전폭·페이지당 1곳). 섹션 시작 6rem 안에서 금빛이 잉크로 사라진다 */
+.sec--band::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6rem; pointer-events: none; z-index: 0;
+  background: linear-gradient(180deg, rgba(122,84,23,.42) 0%, rgba(224,169,59,.16) 45%, rgba(224,169,59,0) 100%); }
+/* 종족 탭 배경 2장 — 섹션의 data-bg-f 로 교차(캐러셀과 같은 .35s) */
+.sec__bg img[data-bg-f] { position: absolute; inset: 0; opacity: 0; transition: opacity .35s ease; }
+.sec[data-bg-f="slayer"] .sec__bg img[data-bg-f="slayer"],
+.sec[data-bg-f="vampire"] .sec__bg img[data-bg-f="vampire"] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .sec__bg img[data-bg-f] { transition: none; } }
+/* v10.1 (2026-09-22, M09 정지 대비 잠정 측정 반영) — 밝은 판 위의 작은 글자 보강. 원칙 6 과 같은 방식: 딤은 보호할 대상에 붙인다.
+   ① 섹션 머리(.sec__head) 뒤 국소 딤 — h2 최악 3.3 → 8.0:1, 아이브로우 2.1 → 3.5:1
+   ② 판 섹션의 아이브로우는 --mute 대신 --body — 작은 글자 4.5:1 을 딤 없이 확보(클래스 3.5 → 8.0, 미디어 2.5 → 5.8)
+   ③ 클래스 탭·태그 묶음(.cls) 위쪽 국소 딤 + 태그 어두운 그림자 — 태그 3.2 → 8.4:1(모바일) */
+.sec--plate .sec__head { position: relative; }
+.sec--plate .sec__head::before { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: max(120%, 60rem); height: 170%; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(7,7,11,.55) 0%, rgba(7,7,11,.38) 40%, rgba(7,7,11,0) 72%); }
+.sec--plate .sec__head .t-eyebrow { color: var(--body); }
+.sec--art .cls { position: relative; }
+.sec--art .cls::before { content: ""; position: absolute; left: 50%; top: -1rem; transform: translateX(-50%);
+  width: max(120%, 60rem); height: 16rem; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 35%, rgba(7,7,11,.55) 0%, rgba(7,7,11,.35) 40%, rgba(7,7,11,0) 72%); }
+.sec--plate .cls__ftag { text-shadow: 0 1px 6px rgba(7,7,11,.85); }
+/* v10.2 — 판 섹션 머리의 서브 문구(.sec__head p / .t-sub)도 --body. M09 정지 대비: 이벤트 서브(--mute) 모바일 3.21:1 미달 → 아이브로우와 같은 규칙.
+   판 위에는 --mute 작은 글자를 두지 않는다(카드 안은 카드 면이 있어 예외). */
+.sec--plate .sec__head p, .sec--plate .sec__head .t-sub { color: var(--body); }
