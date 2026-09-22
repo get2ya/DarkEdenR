@@ -195,6 +195,9 @@ html[data-faction] .btn--primary { color: var(--white); }
   /* ③ 본문도 ② 의 [보상|폼] 쌍과 같은 폭의 가운데 띠로 — 같은 축에 선 두 카드의 내용 폭을 맞춘다.
      식은 ② 쌍 그대로: 보상 2칸(160px×2) + 칸 사이 1.6rem + 열 간격 7rem + 폼 40rem. */
   .pcard2__body--store { max-width: calc(320px + 1.6rem + 7rem + 40rem); margin-inline: auto; }
+  /* v17(Justin "상자가 내용물에 비해 엄청 커진다") — ②③ 카드 상자 자체를 안쪽 띠 + 패딩(3.2rem×2)으로 묶어 가운데.
+     1440 ≈ 1,068px(전 1,386) · 1920 ≈ 1,146. 안쪽 [보상|폼] 배치·입력창 폭은 그대로. 상자는 내용물 폭을 따른다, 화면 폭을 따르지 않는다. */
+  #sec-pre .pcard2 { max-width: calc(320px + 1.6rem + 7rem + 40rem + 6.4rem + 2px); margin-inline: auto; }   /* +2px = 카드 테두리 1px×2 — 안쪽 폼 열 544·입력창 386(1440) 그대로 */
 }
 
 /* 보상 이미지 영역 — 실서비스 전환 시 자리표시 2줄만 지우고 <img> 로 교체한다.
