@@ -6,7 +6,7 @@
    (그 순간 목표 위치를 실제 위치에 맞춰 튀지 않게 한다). 트랙패드는 이미 관성이 있어 휠 델타가 작고 잦다 — 같은 경로로 처리해도 자연스럽다.
    끄는 조건: <1024(PC 전용) · prefers-reduced-motion · html[data-shot](캡처) · 모달 열림(is-modal-open, 모달 안 스크롤을 막지 않기 위해)
    · 휠 이벤트 대상이 스크롤 가능한 안쪽 요소(모달 본문 등)일 때.
-   값: EASE = 프레임당 남은 거리의 12% 를 따라감(60fps 기준 약 0.35초에 95% 도달). WHEEL_SCALE = 1(브라우저 delta 그대로).
+   값: EASE = 프레임당 남은 거리의 12% 를 따라감(60fps 기준 약 0.35초에 95% 도달). 이동은 behavior:'instant'(CSS 스무스와 충돌 방지).
    사용: 페이지 끝에 <script src="_snippets/glide.js" defer></script> 한 줄(stack.js 뒤). 페이지별 설정 없음. */
 (function () {
   var doc = document, win = window, root = doc.documentElement;
@@ -24,15 +24,18 @@
     }
     return false;
   }
+  /* 페이지 CSS 의 html{scroll-behavior:smooth} 가 프레임마다 scrollTo 에 브라우저 스무스를 다시 걸어 서로 싸운다(연속 휠에서 44프레임 기어감 뒤 60px 점프 — PD 실측).
+     우리 이동만 즉시 적용한다. GNB 앵커 클릭의 CSS 스무스는 그대로. 'instant' 를 모르는 구형 브라우저는 무시해 이전 동작으로 떨어진다. */
+  function jump(y) { try { win.scrollTo({ top: Math.round(y), left: 0, behavior: 'instant' }); } catch (e) { win.scrollTo(0, Math.round(y)); } }
   function sync() { current = target = win.pageYOffset || root.scrollTop || 0; settled = true; }
   function frame() {
     raf = 0;
     if (!active) return;
     if (paused()) { sync(); return; }
     var d = target - current;
-    if (Math.abs(d) < .5) { current = target; win.scrollTo(0, Math.round(current)); settled = true; return; }
+    if (Math.abs(d) < .5) { current = target; jump(current); settled = true; return; }
     current += d * EASE;
-    win.scrollTo(0, Math.round(current));
+    jump(current);
     raf = win.requestAnimationFrame(frame);
   }
   function onWheel(e) {
